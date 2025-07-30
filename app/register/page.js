@@ -1,17 +1,17 @@
 'use client';
 
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from 'react';
 
-export default function RegisterPage() {
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirm: "",
-    accept: false,
-  });
+export default function Register() {
+  const [firstname, setFirstname] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [shoeSize, setShoeSize] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,14 +31,8 @@ export default function RegisterPage() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const onChange = (key) => (e) => {
-    const value = key === "accept" ? e.target.checked : e.target.value;
-    setForm((s) => ({ ...s, [key]: value }));
-    setErrors((s) => ({ ...s, [key]: "" }));
-  };
-
   const passwordScore = useMemo(() => {
-    const p = form.password || "";
+    const p = password || "";
     let score = 0;
     if (p.length >= 8) score++;
     if (/[A-Z]/.test(p)) score++;
@@ -46,7 +40,7 @@ export default function RegisterPage() {
     if (/\d/.test(p)) score++;
     if (/[^A-Za-z0-9]/.test(p)) score++;
     return Math.min(score, 4);
-  }, [form.password]);
+  }, [password]);
 
   const strengthText = ["อ่อนมาก", "อ่อน", "ปานกลาง", "ดี", "แข็งแรง"][passwordScore];
   const strengthWidth = ["5%", "25%", "50%", "75%", "100%"][passwordScore];
@@ -54,19 +48,18 @@ export default function RegisterPage() {
 
   const validate = () => {
     const next = {};
-    if (!form.username.trim()) next.username = "กรุณากรอกชื่อผู้ใช้";
-    else if (form.username.trim().length < 3) next.username = "อย่างน้อย 3 ตัวอักษร";
-
-    if (!form.email.trim()) next.email = "กรุณากรอกอีเมล";
-    else if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = "รูปแบบอีเมลไม่ถูกต้อง";
-
-    if (!form.password) next.password = "กรุณากรอกรหัスผ่าน";
-    else if (form.password.length < 8) next.password = "อย่างน้อย 8 ตัวอักษร";
-
-    if (!form.confirm) next.confirm = "กรุณายืนยันรหัสผ่าน";
-    else if (form.confirm !== form.password) next.confirm = "รหัสผ่านไม่ตรงกัน";
-
-    if (!form.accept) next.accept = "กรุณายอมรับเงื่อนไขการใช้งาน";
+    if (!firstname) next.firstname = "กรุณาเลือกคำนำหน้าชื่อ";
+    if (!fullname.trim()) next.fullname = "กรุณากรอกชื่อ";
+    if (!lastname.trim()) next.lastname = "กรุณากรอกนามสกุล";
+    if (!username.trim()) next.username = "กรุณากรอกชื่อผู้ใช้";
+    else if (username.trim().length < 3) next.username = "อย่างน้อย 3 ตัวอักษร";
+    if (!email.trim()) next.email = "กรุณากรอกอีเมล";
+    else if (!/\S+@\S+\.\S+/.test(email)) next.email = "รูปแบบอีเมลไม่ถูกต้อง";
+    if (!phone.trim()) next.phone = "กรุณากรอกเบอร์โทรศัพท์";
+    else if (!/^[0-9]{10}$/.test(phone.replace(/-/g, ''))) next.phone = "เบอร์โทรศัพท์ไม่ถูกต้อง";
+    if (!shoeSize) next.shoeSize = "กรุณาเลือกไซส์รองเท้า";
+    if (!password) next.password = "กรุณากรอกรหัสผ่าน";
+    else if (password.length < 6) next.password = "อย่างน้อย 6 ตัวอักษร";
 
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -75,16 +68,46 @@ export default function RegisterPage() {
   const handleSubmit = async () => {
     if (validate()) {
       setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitted(true);
-      setIsLoading(false);
+      try {
+        const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            firstname, 
+            fullname, 
+            lastname, 
+            username, 
+            password,
+            email,
+            phone,
+            shoeSize
+          }),
+        });
+        const result = await res.json();
+        console.log(result);
+        
+        // Simulate processing time
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        setSubmitted(true);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error:', error);
+        setIsLoading(false);
+      }
     }
+  };
+
+  const clearError = (field) => {
+    setErrors(prev => ({ ...prev, [field]: '' }));
   };
 
   const containerStyle = {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%)',
+    background: 'linear-gradient(135deg, #1a1a1a 0%, #654321 30%, #8B4513 70%, #1a1a1a 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -111,7 +134,7 @@ export default function RegisterPage() {
     position: 'relative',
     zIndex: 10,
     width: '100%',
-    maxWidth: '28rem',
+    maxWidth: '32rem',
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -131,19 +154,19 @@ export default function RegisterPage() {
   const logoStyle = {
     width: '4rem',
     height: '4rem',
-    background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+    background: 'linear-gradient(135deg, #D2691E, #CD853F)',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
+    boxShadow: '0 0 20px rgba(210, 105, 30, 0.5)',
     animation: 'pulse 2s infinite'
   };
 
   const titleStyle = {
     fontSize: '2.5rem',
     fontWeight: 'bold',
-    background: 'linear-gradient(135deg, #a855f7, #ec4899, #3b82f6)',
+    background: 'linear-gradient(135deg, #D2691E, #CD853F, #DEB887)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     textAlign: 'center',
@@ -183,6 +206,11 @@ export default function RegisterPage() {
     boxShadow: hasError ? '0 0 0 1px rgba(239, 68, 68, 0.5)' : 'none'
   });
 
+  const selectStyle = (hasError) => ({
+    ...inputStyle(hasError),
+    cursor: 'pointer'
+  });
+
   const passwordContainerStyle = {
     position: 'relative',
     display: 'flex',
@@ -194,7 +222,7 @@ export default function RegisterPage() {
     right: '0.75rem',
     background: 'none',
     border: 'none',
-    color: '#a855f7',
+    color: '#D2691E',
     fontSize: '0.75rem',
     fontWeight: '600',
     cursor: 'pointer',
@@ -228,26 +256,10 @@ export default function RegisterPage() {
     marginTop: '0.25rem'
   };
 
-  const checkboxContainerStyle = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '0.75rem',
-    fontSize: '0.875rem',
-    color: '#9ca3af',
-    marginBottom: '1.5rem'
-  };
-
-  const checkboxStyle = {
-    width: '1rem',
-    height: '1rem',
-    marginTop: '0.125rem',
-    accentColor: '#8b5cf6'
-  };
-
   const submitButtonStyle = {
     width: '100%',
     padding: '1rem',
-    background: 'linear-gradient(135deg, #8b5cf6, #ec4899, #8b5cf6)',
+    background: 'linear-gradient(135deg, #D2691E, #CD853F, #D2691E)',
     border: 'none',
     borderRadius: '1rem',
     color: 'white',
@@ -255,7 +267,7 @@ export default function RegisterPage() {
     fontWeight: 'bold',
     cursor: isLoading ? 'not-allowed' : 'pointer',
     transition: 'all 0.3s ease',
-    boxShadow: '0 10px 25px rgba(139, 92, 246, 0.3)',
+    boxShadow: '0 10px 25px rgba(210, 105, 30, 0.3)',
     opacity: isLoading ? 0.5 : 1,
     position: 'relative',
     overflow: 'hidden'
@@ -274,19 +286,23 @@ export default function RegisterPage() {
     fontWeight: '500'
   };
 
-  const footerStyle = {
-    marginTop: '2rem',
-    textAlign: 'center',
-    color: '#9ca3af',
-    fontSize: '0.875rem'
-  };
-
-  const linkStyle = {
-    color: '#a855f7',
-    textDecoration: 'underline',
-    fontWeight: '500',
-    transition: 'color 0.2s ease'
-  };
+  // Shoe sizes
+  const shoeSizes = [
+    { value: '35', label: 'US 5 / EU 35' },
+    { value: '36', label: 'US 5.5 / EU 36' },
+    { value: '37', label: 'US 6 / EU 37' },
+    { value: '38', label: 'US 6.5 / EU 38' },
+    { value: '39', label: 'US 7 / EU 39' },
+    { value: '40', label: 'US 7.5 / EU 40' },
+    { value: '41', label: 'US 8 / EU 41' },
+    { value: '42', label: 'US 8.5 / EU 42' },
+    { value: '43', label: 'US 9 / EU 43' },
+    { value: '44', label: 'US 9.5 / EU 44' },
+    { value: '45', label: 'US 10 / EU 45' },
+    { value: '46', label: 'US 10.5 / EU 46' },
+    { value: '47', label: 'US 11 / EU 47' },
+    { value: '48', label: 'US 12 / EU 48' }
+  ];
 
   return (
     <div style={containerStyle}>
@@ -294,7 +310,7 @@ export default function RegisterPage() {
       <div
         style={backgroundParticleStyle(
           '24rem',
-          '#8b5cf6',
+          '#D2691E',
           `${20 + mousePosition.x * 0.1}%`,
           `${10 + mousePosition.y * 0.1}%`,
           'float 6s ease-in-out infinite'
@@ -303,7 +319,7 @@ export default function RegisterPage() {
       <div
         style={backgroundParticleStyle(
           '20rem',
-          '#3b82f6',
+          '#CD853F',
           `${70 + mousePosition.x * 0.05}%`,
           `${80 + mousePosition.y * 0.05}%`,
           'float 8s ease-in-out infinite reverse'
@@ -312,7 +328,7 @@ export default function RegisterPage() {
       <div
         style={backgroundParticleStyle(
           '16rem',
-          '#ec4899',
+          '#DEB887',
           `${60 + mousePosition.x * 0.03}%`,
           `${60 + mousePosition.y * 0.03}%`,
           'float 10s ease-in-out infinite'
@@ -324,187 +340,243 @@ export default function RegisterPage() {
         {/* Logo */}
         <div style={logoContainerStyle}>
           <div style={logoStyle}>
-            <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
-              <path d="M2,18H7.25L8.25,15H15.75L16.75,18H22L20,8H18L16.25,12H7.75L6,8H4L2,18M9,10H15L15.25,11H8.75L9,10Z" />
+            <svg width="36" height="36" fill="white" viewBox="0 0 24 24">
+              <path d="M2.5 13C2.22 13 2 13.22 2 13.5V17.5C2 17.78 2.22 18 2.5 18H21.5C21.78 18 22 17.78 22 17.5V13.5C22 13.22 21.78 13 21.5 13H15L14 11H16.5C16.78 11 17 10.78 17 10.5S16.78 10 16.5 10H14.41L13.41 9H16.5C16.78 9 17 8.78 17 8.5S16.78 8 16.5 8H12.91L11.91 7H16.5C16.78 7 17 6.78 17 6.5S16.78 6 16.5 6H11.41L10.29 4.71C10.11 4.43 9.75 4.35 9.47 4.53L2.71 8.29C2.43 8.47 2.35 8.83 2.53 9.11L3.59 10.73C3.77 11.01 4.13 11.09 4.41 10.91L5 10.56V13H2.5ZM4 9.44L9.56 6.56L11.09 8.5H4.41L4 9.44ZM21 14V17H3V14H5V15.5C5 15.78 5.22 16 5.5 16S6 15.78 6 15.5V14H18V15.5C18 15.78 18.22 16 18.5 16S19 15.78 19 15.5V14H21Z"/>
+              <circle cx="7" cy="15.5" r="0.5" fill="white"/>
+              <circle cx="17" cy="15.5" r="0.5" fill="white"/>
+              <path d="M12 11.5C12 12.33 11.33 13 10.5 13S9 12.33 9 11.5 9.67 10 10.5 10 12 10.67 12 11.5Z" fill="rgba(255,255,255,0.7)"/>
             </svg>
           </div>
         </div>
 
         {/* Header */}
-        <h1 style={titleStyle}>สมัครสมาชิก</h1>
-        <p style={subtitleStyle}>สร้างบัญชีเพื่อเข้าถึงโลกแห่งรองเท้าสุดเท่</p>
+        <h1 style={titleStyle}>ShoesHub</h1>
+        <p style={subtitleStyle}>สมัครสมาชิกเพื่อช้อปรองเท้าแบรนด์ดัง</p>
 
-        {/* Username */}
-        <div style={inputGroupStyle}>
-          <label style={labelStyle}>ชื่อผู้ใช้</label>
-          <input
-            type="text"
-            value={form.username}
-            onChange={onChange("username")}
-            placeholder="เช่น nongname123"
-            autoComplete="username"
-            style={inputStyle(errors.username)}
-            minLength={3}
-            required
-          />
-          <p style={errorStyle}>
-            {errors.username || "อย่างน้อย 3 ตัวอักษร (a–z, 0–9, _)"}
-          </p>
-        </div>
+        <div>
+          {/* Title Prefix */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>คำนำหน้าชื่อ</label>
+            <select
+              name="firstname"
+              value={firstname}
+              onChange={(e) => {
+                setFirstname(e.target.value);
+                clearError('firstname');
+              }}
+              style={selectStyle(errors.firstname)}
+              required
+            >
+              <option value="">เลือกคำนำหน้าชื่อ</option>
+              <option value="นาย">นาย</option>
+              <option value="นาง">นาง</option>
+              <option value="นางสาว">นางสาว</option>
+            </select>
+            {errors.firstname && <p style={errorStyle}>{errors.firstname}</p>}
+          </div>
 
-        {/* Email */}
-        <div style={inputGroupStyle}>
-          <label style={labelStyle}>อีเมล</label>
-          <input
-            type="email"
-            value={form.email}
-            onChange={onChange("email")}
-            placeholder="example@email.com"
-            autoComplete="email"
-            style={inputStyle(errors.email)}
-            required
-          />
-          <p style={errorStyle}>
-            {errors.email || "ใช้อีเมลที่สามารถยืนยันตัวตนได้"}
-          </p>
-        </div>
-
-        {/* Password */}
-        <div style={inputGroupStyle}>
-          <label style={labelStyle}>รหัสผ่าน</label>
-          <div style={passwordContainerStyle}>
+          {/* First Name */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>ชื่อ</label>
             <input
-              type={showPassword ? "text" : "password"}
-              value={form.password}
-              onChange={onChange("password")}
-              placeholder="อย่างน้อย 8 ตัวอักษร"
-              autoComplete="new-password"
-              style={{...inputStyle(errors.password), paddingRight: '3rem'}}
-              minLength={8}
+              type="text"
+              placeholder="กรอกชื่อของคุณ"
+              value={fullname}
+              onChange={(e) => {
+                setFullname(e.target.value);
+                clearError('fullname');
+              }}
+              style={inputStyle(errors.fullname)}
               required
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              style={showPasswordButtonStyle}
-            >
-              {showPassword ? "ซ่อน" : "แสดง"}
-            </button>
+            {errors.fullname && <p style={errorStyle}>{errors.fullname}</p>}
           </div>
-          
-          {/* Password strength indicator */}
-          <div style={strengthIndicatorStyle}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', marginBottom: '0.5rem'}}>
-              <span style={{color: '#9ca3af'}}>ความแข็งแรง</span>
-              <span style={{
-                color: passwordScore === 0 ? '#f87171' :
-                       passwordScore === 1 ? '#fb923c' :
-                       passwordScore === 2 ? '#fbbf24' :
-                       passwordScore === 3 ? '#4ade80' : '#22c55e',
-                fontWeight: '500'
-              }}>
-                {strengthText}
-              </span>
-            </div>
-            <div style={strengthBarContainerStyle}>
-              <div style={strengthBarStyle} />
-            </div>
-          </div>
-          
-          {errors.password && <p style={errorStyle}>{errors.password}</p>}
-        </div>
 
-        {/* Confirm Password */}
-        <div style={inputGroupStyle}>
-          <label style={labelStyle}>ยืนยันรหัสผ่าน</label>
-          <div style={passwordContainerStyle}>
+          {/* Last Name */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>นามสกุล</label>
             <input
-              type={showConfirmPassword ? "text" : "password"}
-              value={form.confirm}
-              onChange={onChange("confirm")}
-              placeholder="พิมพ์รหัสผ่านอีกครั้ง"
-              autoComplete="new-password"
-              style={{...inputStyle(errors.confirm), paddingRight: '3rem'}}
+              type="text"
+              placeholder="กรอกนามสกุลของคุณ"
+              value={lastname}
+              onChange={(e) => {
+                setLastname(e.target.value);
+                clearError('lastname');
+              }}
+              style={inputStyle(errors.lastname)}
               required
             />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={showPasswordButtonStyle}
-            >
-              {showConfirmPassword ? "ซ่อน" : "แสดง"}
-            </button>
+            {errors.lastname && <p style={errorStyle}>{errors.lastname}</p>}
           </div>
-          {errors.confirm && <p style={errorStyle}>{errors.confirm}</p>}
-        </div>
 
-        {/* Accept Terms */}
-        <div style={checkboxContainerStyle}>
-          <input
-            type="checkbox"
-            checked={form.accept}
-            onChange={onChange("accept")}
-            style={checkboxStyle}
-            required
-          />
-          <label style={{cursor: 'pointer'}}>
-            ฉันยอมรับ{" "}
-            <a href="/terms" style={linkStyle}>
-              เงื่อนไขการใช้งาน
-            </a>
-          </label>
-        </div>
-        {errors.accept && <p style={errorStyle}>{errors.accept}</p>}
+          {/* Email */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>อีเมล</label>
+            <input
+              type="email"
+              placeholder="example@email.com"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                clearError('email');
+              }}
+              style={inputStyle(errors.email)}
+              required
+            />
+            {errors.email && <p style={errorStyle}>{errors.email}</p>}
+          </div>
 
-        {/* Submit Button */}
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={isLoading}
-          style={submitButtonStyle}
-          onMouseEnter={(e) => {
-            if (!isLoading) {
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 15px 35px rgba(139, 92, 246, 0.4)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isLoading) {
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 10px 25px rgba(139, 92, 246, 0.3)';
-            }
-          }}
-        >
-          {isLoading ? (
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'}}>
-              <div style={{
-                width: '1.25rem',
-                height: '1.25rem',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                borderTop: '2px solid white',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite'
-              }} />
-              กำลังประมวลผล...
+          {/* Phone */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>เบอร์โทรศัพท์</label>
+            <input
+              type="tel"
+              placeholder="0xx-xxx-xxxx"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                clearError('phone');
+              }}
+              style={inputStyle(errors.phone)}
+              required
+            />
+            {errors.phone && <p style={errorStyle}>{errors.phone}</p>}
+          </div>
+
+          {/* Shoe Size */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>ไซส์รองเท้าที่ใส่</label>
+            <select
+              name="shoeSize"
+              value={shoeSize}
+              onChange={(e) => {
+                setShoeSize(e.target.value);
+                clearError('shoeSize');
+              }}
+              style={selectStyle(errors.shoeSize)}
+              required
+            >
+              <option value="">เลือกไซส์รองเท้า</option>
+              {shoeSizes.map((size) => (
+                <option key={size.value} value={size.value}>
+                  {size.label}
+                </option>
+              ))}
+            </select>
+            {errors.shoeSize && <p style={errorStyle}>{errors.shoeSize}</p>}
+          </div>
+
+          {/* Username */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>ชื่อผู้ใช้</label>
+            <input
+              type="text"
+              placeholder="เช่น shoemaster123"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                clearError('username');
+              }}
+              style={inputStyle(errors.username)}
+              minLength={3}
+              required
+            />
+            <p style={errorStyle}>
+              {errors.username || "อย่างน้อย 3 ตัวอักษร (a–z, 0–9, _)"}
+            </p>
+          </div>
+
+          {/* Password */}
+          <div style={inputGroupStyle}>
+            <label style={labelStyle}>รหัสผ่าน</label>
+            <div style={passwordContainerStyle}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="อย่างน้อย 6 ตัวอักษร"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  clearError('password');
+                }}
+                style={{...inputStyle(errors.password), paddingRight: '3rem'}}
+                minLength={6}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={showPasswordButtonStyle}
+              >
+                {showPassword ? "ซ่อน" : "แสดง"}
+              </button>
             </div>
-          ) : (
-            'สมัครสมาชิก'
+            
+            {/* Password strength indicator */}
+            {password && (
+              <div style={strengthIndicatorStyle}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', marginBottom: '0.5rem'}}>
+                  <span style={{color: '#9ca3af'}}>ความแข็งแรง</span>
+                  <span style={{
+                    color: passwordScore === 0 ? '#f87171' :
+                           passwordScore === 1 ? '#fb923c' :
+                           passwordScore === 2 ? '#fbbf24' :
+                           passwordScore === 3 ? '#4ade80' : '#22c55e',
+                    fontWeight: '500'
+                  }}>
+                    {strengthText}
+                  </span>
+                </div>
+                <div style={strengthBarContainerStyle}>
+                  <div style={strengthBarStyle} />
+                </div>
+              </div>
+            )}
+            
+            {errors.password && <p style={errorStyle}>{errors.password}</p>}
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={handleSubmit}
+            style={submitButtonStyle}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 15px 35px rgba(210, 105, 30, 0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 10px 25px rgba(210, 105, 30, 0.3)';
+              }
+            }}
+          >
+            {isLoading ? (
+              <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'}}>
+                <div style={{
+                  width: '1.25rem',
+                  height: '1.25rem',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderTop: '2px solid white',
+                  borderRadius: '50%',
+                  animation: 'spin 1s linear infinite'
+                }} />
+                กำลังประมวลผล...
+              </div>
+            ) : (
+              '👟 เริ่มช้อปรองเท้า'
+            )}
+          </button>
+
+          {/* Success Message */}
+          {submitted && (
+            <div style={successMessageStyle}>
+              🎉 ยินดีต้อนรับสู่ ShoesHub! พร้อมช้อปรองเท้าแบรนด์ดังแล้ว
+            </div>
           )}
-        </button>
-
-        {/* Success Message */}
-        {submitted && (
-          <div style={successMessageStyle}>
-            🎉 ส่งข้อมูลเรียบร้อย! สามารถเชื่อมต่อ API ได้ตามต้องการ
-          </div>
-        )}
-
-        {/* Footer */}
-        <div style={footerStyle}>
-          มีบัญชีอยู่แล้ว?{" "}
-          <a href="/login" style={linkStyle}>
-            เข้าสู่ระบบ
-          </a>
         </div>
       </div>
 
@@ -526,14 +598,19 @@ export default function RegisterPage() {
             50% { opacity: 0.8; }
           }
           
-          input:focus {
-            border-color: rgba(168, 85, 247, 0.5) !important;
-            box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2) !important;
+          input:focus, select:focus {
+            border-color: rgba(210, 105, 30, 0.5) !important;
+            box-shadow: 0 0 0 2px rgba(210, 105, 30, 0.2) !important;
             transform: scale(1.02);
           }
           
           input::placeholder {
             color: rgba(156, 163, 175, 0.8);
+          }
+          
+          select option {
+            background-color: #1f2937;
+            color: white;
           }
           
           button:active {

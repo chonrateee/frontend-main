@@ -59,7 +59,7 @@ export default function LoginPage() {
 
   const containerStyle = {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1e1b4b 0%, #7c3aed 30%, #db2777 70%, #1e1b4b 100%)',
+    background: 'linear-gradient(135deg, #1a1a1a 0%, #654321 30%, #8B4513 70%, #1a1a1a 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -86,13 +86,13 @@ export default function LoginPage() {
     position: 'relative',
     zIndex: 10,
     width: '100%',
-    maxWidth: '26rem',
+    maxWidth: '28rem',
     background: 'rgba(255, 255, 255, 0.08)',
     backdropFilter: 'blur(25px)',
     border: '1px solid rgba(255, 255, 255, 0.15)',
     borderRadius: '2rem',
     padding: '2.5rem',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 100px rgba(124, 58, 237, 0.2)',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 100px rgba(210, 105, 30, 0.2)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease'
   };
 
@@ -106,12 +106,12 @@ export default function LoginPage() {
   const logoStyle = {
     width: '5rem',
     height: '5rem',
-    background: 'linear-gradient(135deg, #7c3aed, #db2777, #3b82f6)',
+    background: 'linear-gradient(135deg, #D2691E, #CD853F)',
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 0 30px rgba(124, 58, 237, 0.6), 0 0 60px rgba(219, 39, 119, 0.3)',
+    boxShadow: '0 0 30px rgba(210, 105, 30, 0.6), 0 0 60px rgba(205, 133, 63, 0.3)',
     animation: 'pulse 2s infinite, float 4s ease-in-out infinite',
     position: 'relative'
   };
@@ -119,7 +119,7 @@ export default function LoginPage() {
   const titleStyle = {
     fontSize: '3rem',
     fontWeight: 'bold',
-    background: 'linear-gradient(135deg, #a855f7, #ec4899, #06b6d4, #10b981)',
+    background: 'linear-gradient(135deg, #D2691E, #CD853F, #DEB887, #F4A460)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundSize: '300% 300%',
@@ -177,7 +177,7 @@ export default function LoginPage() {
     right: '1rem',
     background: 'none',
     border: 'none',
-    color: '#a855f7',
+    color: '#D2691E',
     fontSize: '0.875rem',
     fontWeight: '600',
     cursor: 'pointer',
@@ -212,12 +212,12 @@ export default function LoginPage() {
   const checkboxStyle = {
     width: '1.1rem',
     height: '1.1rem',
-    accentColor: '#7c3aed',
+    accentColor: '#D2691E',
     cursor: 'pointer'
   };
 
   const forgotLinkStyle = {
-    color: '#a855f7',
+    color: '#D2691E',
     textDecoration: 'none',
     fontWeight: '500',
     transition: 'all 0.2s ease',
@@ -227,7 +227,7 @@ export default function LoginPage() {
   const submitButtonStyle = {
     width: '100%',
     padding: '1rem 1.5rem',
-    background: 'linear-gradient(135deg, #7c3aed, #db2777, #7c3aed)',
+    background: 'linear-gradient(135deg, #D2691E, #CD853F, #D2691E)',
     backgroundSize: '200% 200%',
     border: 'none',
     borderRadius: '1.25rem',
@@ -236,7 +236,7 @@ export default function LoginPage() {
     fontWeight: 'bold',
     cursor: isLoading ? 'not-allowed' : 'pointer',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    boxShadow: '0 10px 30px rgba(124, 58, 237, 0.4), 0 0 60px rgba(219, 39, 119, 0.2)',
+    boxShadow: '0 10px 30px rgba(210, 105, 30, 0.4), 0 0 60px rgba(205, 133, 63, 0.2)',
     opacity: isLoading ? 0.7 : 1,
     position: 'relative',
     overflow: 'hidden',
@@ -303,7 +303,7 @@ export default function LoginPage() {
   };
 
   const linkStyle = {
-    color: '#a855f7',
+    color: '#D2691E',
     textDecoration: 'underline',
     fontWeight: '600',
     transition: 'all 0.2s ease'
@@ -315,7 +315,7 @@ export default function LoginPage() {
       <div
         style={backgroundParticleStyle(
           '28rem',
-          '#7c3aed',
+          '#D2691E',
           `${15 + mousePosition.x * 0.08}%`,
           `${5 + mousePosition.y * 0.08}%`,
           'float 7s ease-in-out infinite'
@@ -324,7 +324,7 @@ export default function LoginPage() {
       <div
         style={backgroundParticleStyle(
           '24rem',
-          '#db2777',
+          '#CD853F',
           `${75 + mousePosition.x * 0.06}%`,
           `${85 + mousePosition.y * 0.06}%`,
           'float 9s ease-in-out infinite reverse'
@@ -333,7 +333,7 @@ export default function LoginPage() {
       <div
         style={backgroundParticleStyle(
           '20rem',
-          '#3b82f6',
+          '#DEB887',
           `${50 + mousePosition.x * 0.04}%`,
           `${50 + mousePosition.y * 0.04}%`,
           'float 11s ease-in-out infinite'
@@ -342,7 +342,7 @@ export default function LoginPage() {
       <div
         style={backgroundParticleStyle(
           '16rem',
-          '#10b981',
+          '#F4A460',
           `${30 + mousePosition.x * 0.07}%`,
           `${70 + mousePosition.y * 0.07}%`,
           'float 8s ease-in-out infinite reverse'
@@ -350,54 +350,26 @@ export default function LoginPage() {
       />
 
       {/* Form container */}
-      <div 
-        style={formContainerStyle}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)';
-          e.currentTarget.style.boxShadow = '0 35px 70px -12px rgba(0, 0, 0, 0.7), 0 0 120px rgba(124, 58, 237, 0.3)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 100px rgba(124, 58, 237, 0.2)';
-        }}
-      >
+      <div style={formContainerStyle}>
         {/* Logo */}
         <div style={logoContainerStyle}>
           <div style={logoStyle}>
             <svg width="36" height="36" fill="white" viewBox="0 0 24 24">
-              <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+              <path d="M2.5 13C2.22 13 2 13.22 2 13.5V17.5C2 17.78 2.22 18 2.5 18H21.5C21.78 18 22 17.78 22 17.5V13.5C22 13.22 21.78 13 21.5 13H15L14 11H16.5C16.78 11 17 10.78 17 10.5S16.78 10 16.5 10H14.41L13.41 9H16.5C16.78 9 17 8.78 17 8.5S16.78 8 16.5 8H12.91L11.91 7H16.5C16.78 7 17 6.78 17 6.5S16.78 6 16.5 6H11.41L10.29 4.71C10.11 4.43 9.75 4.35 9.47 4.53L2.71 8.29C2.43 8.47 2.35 8.83 2.53 9.11L3.59 10.73C3.77 11.01 4.13 11.09 4.41 10.91L5 10.56V13H2.5ZM4 9.44L9.56 6.56L11.09 8.5H4.41L4 9.44ZM21 14V17H3V14H5V15.5C5 15.78 5.22 16 5.5 16S6 15.78 6 15.5V14H18V15.5C18 15.78 18.22 16 18.5 16S19 15.78 19 15.5V14H21Z"/>
+              <circle cx="7" cy="15.5" r="0.5" fill="white"/>
+              <circle cx="17" cy="15.5" r="0.5" fill="white"/>
+              <path d="M12 11.5C12 12.33 11.33 13 10.5 13S9 12.33 9 11.5 9.67 10 10.5 10 12 10.67 12 11.5Z" fill="rgba(255,255,255,0.7)"/>
             </svg>
-            <div style={{
-              position: 'absolute',
-              inset: '-5px',
-              background: 'linear-gradient(135deg, #7c3aed, #db2777, #3b82f6)',
-              borderRadius: '50%',
-              opacity: 0.3,
-              filter: 'blur(20px)',
-              zIndex: -1
-            }} />
           </div>
         </div>
 
         {/* Header */}
-        <h1 style={titleStyle}>เข้าสู่ระบบ</h1>
+        <h1 style={titleStyle}>ShoesHub</h1>
         <p style={subtitleStyle}>ยินดีต้อนรับกลับสู่โลกแห่งรองเท้าสุดเท่</p>
 
         {/* Social Login Buttons */}
         <div style={socialButtonsStyle}>
-          <button 
-            style={socialButtonStyle}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
-            }}
-          >
+          <button style={socialButtonStyle}>
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -406,19 +378,7 @@ export default function LoginPage() {
             </svg>
             Google
           </button>
-          <button 
-            style={socialButtonStyle}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.05)';
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
-            }}
-          >
+          <button style={socialButtonStyle}>
             <svg width="20" height="20" fill="#1877f2" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg>
@@ -443,16 +403,6 @@ export default function LoginPage() {
             placeholder="example@email.com"
             autoComplete="email"
             style={inputStyle(errors.email)}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'rgba(168, 85, 247, 0.6)';
-              e.target.style.boxShadow = '0 0 0 4px rgba(168, 85, 247, 0.15), 0 8px 25px rgba(0, 0, 0, 0.15)';
-              e.target.style.transform = 'translateY(-2px) scale(1.02)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = errors.email ? 'rgba(248, 113, 113, 0.6)' : 'rgba(255, 255, 255, 0.15)';
-              e.target.style.boxShadow = errors.email ? '0 0 0 3px rgba(248, 113, 113, 0.1)' : '0 4px 15px rgba(0, 0, 0, 0.1)';
-              e.target.style.transform = 'translateY(0) scale(1)';
-            }}
             required
           />
           {errors.email && <p style={errorStyle}>{errors.email}</p>}
@@ -469,30 +419,12 @@ export default function LoginPage() {
               placeholder="รหัสผ่านของคุณ"
               autoComplete="current-password"
               style={{...inputStyle(errors.password), paddingRight: '4rem'}}
-              onFocus={(e) => {
-                e.target.style.borderColor = 'rgba(168, 85, 247, 0.6)';
-                e.target.style.boxShadow = '0 0 0 4px rgba(168, 85, 247, 0.15), 0 8px 25px rgba(0, 0, 0, 0.15)';
-                e.target.style.transform = 'translateY(-2px) scale(1.02)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = errors.password ? 'rgba(248, 113, 113, 0.6)' : 'rgba(255, 255, 255, 0.15)';
-                e.target.style.boxShadow = errors.password ? '0 0 0 3px rgba(248, 113, 113, 0.1)' : '0 4px 15px rgba(0, 0, 0, 0.1)';
-                e.target.style.transform = 'translateY(0) scale(1)';
-              }}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               style={showPasswordButtonStyle}
-              onMouseEnter={(e) => {
-                e.target.style.color = '#c084fc';
-                e.target.style.background = 'rgba(168, 85, 247, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = '#a855f7';
-                e.target.style.background = 'none';
-              }}
             >
               {showPassword ? "ซ่อน" : "แสดง"}
             </button>
@@ -513,18 +445,7 @@ export default function LoginPage() {
               จำรหัสผ่าน
             </label>
           </div>
-          <a 
-            href="/forgot-password" 
-            style={forgotLinkStyle}
-            onMouseEnter={(e) => {
-              e.target.style.color = '#c084fc';
-              e.target.style.textDecoration = 'none';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#a855f7';
-              e.target.style.textDecoration = 'underline';
-            }}
-          >
+          <a href="/forgot-password" style={forgotLinkStyle}>
             ลืมรหัสผ่าน?
           </a>
         </div>
@@ -535,28 +456,6 @@ export default function LoginPage() {
           onClick={handleSubmit}
           disabled={isLoading}
           style={submitButtonStyle}
-          onMouseEnter={(e) => {
-            if (!isLoading) {
-              e.target.style.transform = 'translateY(-3px) scale(1.02)';
-              e.target.style.boxShadow = '0 15px 40px rgba(124, 58, 237, 0.5), 0 0 80px rgba(219, 39, 119, 0.3)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isLoading) {
-              e.target.style.transform = 'translateY(0) scale(1)';
-              e.target.style.boxShadow = '0 10px 30px rgba(124, 58, 237, 0.4), 0 0 60px rgba(219, 39, 119, 0.2)';
-            }
-          }}
-          onMouseDown={(e) => {
-            if (!isLoading) {
-              e.target.style.transform = 'translateY(-1px) scale(0.98)';
-            }
-          }}
-          onMouseUp={(e) => {
-            if (!isLoading) {
-              e.target.style.transform = 'translateY(-3px) scale(1.02)';
-            }
-          }}
         >
           {isLoading ? (
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem'}}>
@@ -571,32 +470,21 @@ export default function LoginPage() {
               กำลังเข้าสู่ระบบ...
             </div>
           ) : (
-            'เข้าสู่ระบบ'
+            '👟 เข้าสู่ ShoesHub'
           )}
         </button>
 
         {/* Success Message */}
         {loginSuccess && (
           <div style={successMessageStyle}>
-            🎉 เข้าสู่ระบบสำเร็จ! กำลังนำคุณไปยังหน้าหลัก...
+            🎉 เข้าสู่ระบบสำเร็จ! พร้อมช้อปรองเท้าแล้ว
           </div>
         )}
 
         {/* Footer */}
         <div style={footerStyle}>
           ยังไม่มีบัญชี?{" "}
-          <a 
-            href="/register" 
-            style={linkStyle}
-            onMouseEnter={(e) => {
-              e.target.style.color = '#c084fc';
-              e.target.style.textDecoration = 'none';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = '#a855f7';
-              e.target.style.textDecoration = 'underline';
-            }}
-          >
+          <a href="/register" style={linkStyle}>
             สมัครสมาชิก
           </a>
         </div>
