@@ -11,6 +11,7 @@ export default function BrandsPage() {
       id: 1,
       name: 'Nike',
       logo: '✔️',
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop&crop=center',
       description: 'Just Do It - แบรนด์กีฬาชั้นนำระดับโลก',
       products: 156,
       category: 'sports',
@@ -25,6 +26,7 @@ export default function BrandsPage() {
       id: 2,
       name: 'Adidas',
       logo: '⚡',
+      image: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&h=300&fit=crop&crop=center',
       description: 'Impossible is Nothing - นวัตกรรมและประสิทธิภาพ',
       products: 134,
       category: 'sports',
@@ -39,6 +41,7 @@ export default function BrandsPage() {
       id: 3,
       name: 'Converse',
       logo: '⭐',
+      image: 'https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=400&h=300&fit=crop&crop=center',
       description: 'รองเท้าผ้าใบคลาสสิกที่เหนือกาลเวลา',
       products: 89,
       category: 'casual',
@@ -53,71 +56,16 @@ export default function BrandsPage() {
       id: 4,
       name: 'Vans',
       logo: '🔥',
+      image: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=300&fit=crop&crop=center',
       description: 'Off The Wall - วัฒนธรรมสเก็ตบอร์ดและแฟชั่น',
       products: 95,
       category: 'lifestyle',
       colors: ['#000000', '#ff6b00'],
       founded: '1966',
       country: 'USA',
-      specialties: ['สเก็ตบอร์ด', 'ลิ่วสไตล์', 'สตรีท'],
+      specialties: ['สเก็ตบอร์ด', 'ไลฟ์สไตล์', 'สตรีท'],
       popularModels: ['Old Skool', 'Authentic', 'Slip-On'],
       priceRange: '1,900 - 4,200 บาท'
-    },
-    {
-      id: 5,
-      name: 'Puma',
-      logo: '🐆',
-      description: 'Forever Faster - ความเร็วและสไตล์',
-      products: 78,
-      category: 'sports',
-      colors: ['#000000', '#ffed00'],
-      founded: '1948',
-      country: 'Germany',
-      specialties: ['วิ่ง', 'ฟุตบอล', 'มอเตอร์สปอร์ต'],
-      popularModels: ['Suede', 'RS-X', 'Future Rider'],
-      priceRange: '2,000 - 6,500 บาท'
-    },
-    {
-      id: 6,
-      name: 'New Balance',
-      logo: '⚖️',
-      description: 'Fearlessly Independent - สมดุลและคุณภาพ',
-      products: 67,
-      category: 'sports',
-      colors: ['#ed1c24', '#000000'],
-      founded: '1906',
-      country: 'USA',
-      specialties: ['วิ่ง', 'เทนนิส', 'ไลฟ์สไตล์'],
-      popularModels: ['990', '574', '327'],
-      priceRange: '2,800 - 9,000 บาท'
-    },
-    {
-      id: 7,
-      name: 'Reebok',
-      logo: '💪',
-      description: 'Be More Human - ฟิตเนสและการออกกำลังกาย',
-      products: 52,
-      category: 'fitness',
-      colors: ['#000000', '#cc0000'],
-      founded: '1958',
-      country: 'UK',
-      specialties: ['CrossFit', 'ฟิตเนส', 'คลาสสิก'],
-      popularModels: ['Club C', 'Nano', 'Classic Leather'],
-      priceRange: '1,800 - 5,500 บาท'
-    },
-    {
-      id: 8,
-      name: 'Under Armour',
-      logo: '🛡️',
-      description: 'I Will - เทคโนโลยีและประสิทธิภาพ',
-      products: 43,
-      category: 'sports',
-      colors: ['#000000', '#1d4ed8'],
-      founded: '1996',
-      country: 'USA',
-      specialties: ['บาสเกตบอล', 'วิ่ง', 'เทรนนิ่ง'],
-      popularModels: ['Curry', 'HOVR', 'Charged'],
-      priceRange: '2,200 - 7,200 บาท'
     }
   ];
 
@@ -125,8 +73,7 @@ export default function BrandsPage() {
     { id: 'all', name: 'ทั้งหมด', icon: '🎯' },
     { id: 'sports', name: 'กีฬา', icon: '⚽' },
     { id: 'casual', name: 'ลำลอง', icon: '👟' },
-    { id: 'lifestyle', name: 'ไลฟ์สไตล์', icon: '🎨' },
-    { id: 'fitness', name: 'ฟิตเนส', icon: '💪' }
+    { id: 'lifestyle', name: 'ไลฟ์สไตล์', icon: '🎨' }
   ];
 
   const filteredBrands = selectedCategory === 'all' 
@@ -157,15 +104,15 @@ export default function BrandsPage() {
           </p>
           <div className="row text-center">
             <div className="col-md-3">
-              <h3 className="fw-bold">8+</h3>
+              <h3 className="fw-bold">4+</h3>
               <p>แบรนด์ดัง</p>
             </div>
             <div className="col-md-3">
-              <h3 className="fw-bold">714+</h3>
+              <h3 className="fw-bold">474+</h3>
               <p>รุ่นรองเท้า</p>
             </div>
             <div className="col-md-3">
-              <h3 className="fw-bold">50+</h3>
+              <h3 className="fw-bold">3+</h3>
               <p>ประเทศทั่วโลก</p>
             </div>
             <div className="col-md-3">
@@ -216,7 +163,7 @@ export default function BrandsPage() {
         {/* Brands Grid */}
         <div className="row">
           {filteredBrands.map((brand) => (
-            <div key={brand.id} className="col-lg-6 col-xl-4 mb-5">
+            <div key={brand.id} className="col-lg-6 col-xl-6 mb-5">
               <div 
                 className="card h-100 shadow-lg border-0"
                 style={{
@@ -232,25 +179,59 @@ export default function BrandsPage() {
                 onMouseEnter={() => setHoveredBrand(brand.id)}
                 onMouseLeave={() => setHoveredBrand(null)}
               >
+                {/* Brand Image */}
+                <div className="position-relative" style={{ height: '200px' }}>
+                  <img
+                    src={brand.image}
+                    alt={`${brand.name} รองเท้า`}
+                    className="w-100 h-100"
+                    style={{ 
+                      objectFit: 'cover',
+                      transition: 'transform 0.5s ease',
+                      transform: hoveredBrand === brand.id ? 'scale(1.1)' : 'scale(1)'
+                    }}
+                    loading="lazy"
+                  />
+                  <div className={`position-absolute top-0 start-0 w-100 h-100`} style={{
+                    background: hoveredBrand === brand.id 
+                      ? `linear-gradient(45deg, ${brand.colors[0]}40, ${brand.colors[1]}40)`
+                      : 'rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease'
+                  }}></div>
+                  
+                  {/* Brand Logo Overlay */}
+                  <div className="position-absolute" style={{
+                    bottom: '-20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '50px',
+                    height: '50px',
+                    background: `linear-gradient(135deg, ${brand.colors[0]}, ${brand.colors[1]})`,
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                    border: '4px solid white'
+                  }}>
+                    <span style={{ fontSize: '1.5rem' }}>{brand.logo}</span>
+                  </div>
+                </div>
+
                 {/* Brand Header */}
-                <div className="card-header border-0 p-4" style={{
+                <div className="card-header border-0 p-4 pt-5" style={{
                   background: 'transparent'
                 }}>
                   <div className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      <div className="me-3" style={{ fontSize: '2.5rem' }}>
-                        {brand.logo}
-                      </div>
-                      <div>
-                        <h4 className="fw-bold mb-1">{brand.name}</h4>
-                        <small style={{
-                          opacity: hoveredBrand === brand.id ? '0.9' : '0.7'
-                        }}>
-                          {brand.country} • {brand.founded}
-                        </small>
-                      </div>
+                    <div className="text-center w-100">
+                      <h4 className="fw-bold mb-1">{brand.name}</h4>
+                      <small style={{
+                        opacity: hoveredBrand === brand.id ? '0.9' : '0.7'
+                      }}>
+                        {brand.country} • {brand.founded}
+                      </small>
                     </div>
-                    <div className="text-end">
+                    <div className="position-absolute top-0 end-0 m-3">
                       <span className="badge rounded-pill px-3 py-2" style={{
                         background: hoveredBrand === brand.id 
                           ? 'rgba(255,255,255,0.2)' 
@@ -266,7 +247,7 @@ export default function BrandsPage() {
 
                 {/* Brand Body */}
                 <div className="card-body px-4 pb-4">
-                  <p className="mb-3" style={{
+                  <p className="mb-3 text-center" style={{
                     opacity: hoveredBrand === brand.id ? '0.9' : '0.7',
                     lineHeight: '1.6'
                   }}>
@@ -276,7 +257,7 @@ export default function BrandsPage() {
                   {/* Specialties */}
                   <div className="mb-3">
                     <h6 className="fw-bold mb-2">🎯 ความเชี่ยวชาญ</h6>
-                    <div className="d-flex flex-wrap gap-1">
+                    <div className="d-flex flex-wrap gap-1 justify-content-center">
                       {brand.specialties.map((specialty, index) => (
                         <span 
                           key={index}
@@ -298,7 +279,7 @@ export default function BrandsPage() {
                   {/* Popular Models */}
                   <div className="mb-3">
                     <h6 className="fw-bold mb-2">🔥 รุ่นยอดนิยม</h6>
-                    <div className="d-flex flex-wrap gap-1">
+                    <div className="d-flex flex-wrap gap-1 justify-content-center">
                       {brand.popularModels.map((model, index) => (
                         <span 
                           key={index}
@@ -318,10 +299,12 @@ export default function BrandsPage() {
                   </div>
 
                   {/* Price Range */}
-                  <div className="mb-4">
+                  <div className="mb-4 text-center">
                     <h6 className="fw-bold mb-1">💰 ช่วงราคา</h6>
                     <p className="mb-0" style={{
-                      opacity: hoveredBrand === brand.id ? '0.9' : '0.7'
+                      opacity: hoveredBrand === brand.id ? '0.9' : '0.7',
+                      fontSize: '1.1rem',
+                      fontWeight: '600'
                     }}>
                       {brand.priceRange}
                     </p>
@@ -335,7 +318,7 @@ export default function BrandsPage() {
                       background: hoveredBrand === brand.id 
                         ? 'rgba(255,255,255,0.2)'
                         : `linear-gradient(135deg, ${brand.colors[0]} 0%, ${brand.colors[1]} 100%)`,
-                      color: hoveredBrand === brand.id ? 'white' : 'white',
+                      color: 'white',
                       border: hoveredBrand === brand.id ? '2px solid rgba(255,255,255,0.3)' : 'none',
                       borderRadius: '15px',
                       padding: '12px',
@@ -373,7 +356,7 @@ export default function BrandsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {brands.slice(0, 5).map(brand => (
+                      {brands.map(brand => (
                         <tr key={brand.id}>
                           <td>
                             <strong>{brand.logo} {brand.name}</strong>
