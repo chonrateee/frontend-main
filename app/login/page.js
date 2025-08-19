@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -50,10 +52,34 @@ export default function LoginPage() {
   const handleSubmit = async () => {
     if (validate()) {
       setIsLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setLoginSuccess(true);
-      setIsLoading(false);
+      
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        setLoginSuccess(true);
+        
+        // Set login status in localStorage or context
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('userEmail', form.email);
+          
+          // Dispatch custom event to notify navbar
+          window.dispatchEvent(new CustomEvent('loginStatusChanged', { 
+            detail: { isLoggedIn: true, email: form.email } 
+          }));
+        }
+        
+        // Redirect to home page after 1.5 seconds
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+        
+      } catch (error) {
+        console.error('Login error:', error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -477,7 +503,7 @@ export default function LoginPage() {
         {/* Success Message */}
         {loginSuccess && (
           <div style={successMessageStyle}>
-            🎉 เข้าสู่ระบบสำเร็จ! พร้อมช้อปรองเท้าแล้ว
+            🎉 เข้าสู่ระบบสำเร็จ! กำลังพาคุณไปหน้าหลัก...
           </div>
         )}
 

@@ -1,9 +1,9 @@
 'use client';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 export default function PromotionsPage() {
-  const [activeTab, setActiveTab] = useState('hot-deals');
+  const [activeTab, setActiveTab] = useState('flash-sales');
+  const [copiedCode, setCopiedCode] = useState('');
   const [countdown, setCountdown] = useState({
     days: 2,
     hours: 14,
@@ -40,7 +40,27 @@ export default function PromotionsPage() {
     return () => clearInterval(timer);
   }, []);
 
-  const hotDeals = [
+  // Copy coupon code function
+  const copyCouponCode = async (code) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(''), 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = code;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(''), 2000);
+    }
+  };
+
+  const featuredDeals = [
     {
       id: 1,
       title: 'Nike Air Max 90',
@@ -51,8 +71,8 @@ export default function PromotionsPage() {
       timeLeft: '2 วัน',
       stock: 15,
       sold: 85,
-      tags: ['Hot', 'Limited'],
-      colors: ['#ff6b35', '#000000']
+      category: 'รองเท้าวิ่ง',
+      colors: ['#000000', '#ffffff']
     },
     {
       id: 2,
@@ -64,7 +84,7 @@ export default function PromotionsPage() {
       timeLeft: '1 วัน',
       stock: 8,
       sold: 42,
-      tags: ['New', 'Popular'],
+      category: 'รองเท้ากีฬา',
       colors: ['#000000', '#ffffff']
     },
     {
@@ -77,7 +97,7 @@ export default function PromotionsPage() {
       timeLeft: '3 วัน',
       stock: 25,
       sold: 67,
-      tags: ['Classic'],
+      category: 'รองเท้าแฟชั่น',
       colors: ['#e31e24', '#ffffff']
     },
     {
@@ -90,7 +110,7 @@ export default function PromotionsPage() {
       timeLeft: '5 ชม.',
       stock: 5,
       sold: 95,
-      tags: ['Almost Gone'],
+      category: 'รองเท้าลำลอง',
       colors: ['#000000', '#ff6b00']
     }
   ];
@@ -207,7 +227,6 @@ export default function PromotionsPage() {
   ];
 
   const tabs = [
-    { id: 'hot-deals', name: '🔥 ดีลร้อน', icon: '🔥' },
     { id: 'flash-sales', name: '⚡ Flash Sale', icon: '⚡' },
     { id: 'coupons', name: '🎫 คูปอง', icon: '🎫' },
     { id: 'seasonal', name: '🎯 โปรตามฤดูกาล', icon: '🎯' }
@@ -220,7 +239,7 @@ export default function PromotionsPage() {
     }}>
       {/* Hero Section with Countdown */}
       <div className="container-fluid py-5" style={{
-        background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%)',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
         textAlign: 'center',
         marginBottom: '40px',
@@ -235,14 +254,14 @@ export default function PromotionsPage() {
           background: 'url("data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="white" fill-opacity="0.05"%3E%3Ccircle cx="20" cy="20" r="20"/%3E%3C/g%3E%3C/svg%3E")'
         }}></div>
         <div className="container position-relative">
-          <h1 className="display-3 fw-bold mb-4" style={{
+          <h1 className="display-4 fw-bold mb-4" style={{
             textShadow: '0 4px 8px rgba(0,0,0,0.3)',
-            letterSpacing: '2px'
+            letterSpacing: '1px'
           }}>
-            🔥 โปรโมชันสุดพิเศษ
+            โปรโมชันพิเศษ
           </h1>
-          <p className="lead mb-5" style={{ fontSize: '1.4rem', opacity: '0.95' }}>
-            ลดราคาสูงสุด 50% รองเท้าแบรนด์ดัง พร้อมส่งฟรีทั่วประเทศ
+          <p className="lead mb-5" style={{ fontSize: '1.2rem', opacity: '0.95' }}>
+            ข้อเสนอสุดพิเศษสำหรับรองเท้าแบรนด์ดัง พร้อมส่งฟรีทั่วประเทศ
           </p>
           
           {/* Countdown Timer */}
@@ -254,22 +273,22 @@ export default function PromotionsPage() {
                 borderRadius: '20px'
               }}>
                 <div className="card-body p-4">
-                  <h4 className="fw-bold mb-3">⏰ Flash Sale จบใน</h4>
+                  <h5 className="fw-bold mb-3">⏰ โปรโมชันจบใน</h5>
                   <div className="row text-center">
                     <div className="col-3">
-                      <div className="h2 fw-bold mb-1">{countdown.days.toString().padStart(2, '0')}</div>
+                      <div className="h4 fw-bold mb-1">{countdown.days.toString().padStart(2, '0')}</div>
                       <small>วัน</small>
                     </div>
                     <div className="col-3">
-                      <div className="h2 fw-bold mb-1">{countdown.hours.toString().padStart(2, '0')}</div>
+                      <div className="h4 fw-bold mb-1">{countdown.hours.toString().padStart(2, '0')}</div>
                       <small>ชั่วโมง</small>
                     </div>
                     <div className="col-3">
-                      <div className="h2 fw-bold mb-1">{countdown.minutes.toString().padStart(2, '0')}</div>
+                      <div className="h4 fw-bold mb-1">{countdown.minutes.toString().padStart(2, '0')}</div>
                       <small>นาที</small>
                     </div>
                     <div className="col-3">
-                      <div className="h2 fw-bold mb-1">{countdown.seconds.toString().padStart(2, '0')}</div>
+                      <div className="h4 fw-bold mb-1">{countdown.seconds.toString().padStart(2, '0')}</div>
                       <small>วินาที</small>
                     </div>
                   </div>
@@ -299,10 +318,10 @@ export default function PromotionsPage() {
                       }`}
                       style={{
                         background: activeTab === tab.id 
-                          ? 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)'
-                          : 'rgba(255, 107, 53, 0.1)',
-                        color: activeTab === tab.id ? 'white' : '#ff6b35',
-                        border: activeTab === tab.id ? 'none' : '2px solid rgba(255, 107, 53, 0.2)',
+                          ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                          : 'rgba(102, 126, 234, 0.1)',
+                        color: activeTab === tab.id ? 'white' : '#667eea',
+                        border: activeTab === tab.id ? 'none' : '2px solid rgba(102, 126, 234, 0.2)',
                         transition: 'all 0.3s ease'
                       }}
                       onClick={() => setActiveTab(tab.id)}
@@ -315,121 +334,6 @@ export default function PromotionsPage() {
             </div>
           </div>
         </div>
-
-        {/* Hot Deals Section */}
-        {activeTab === 'hot-deals' && (
-          <div className="row">
-            <div className="col-12 mb-4">
-              <h3 className="fw-bold" style={{ color: '#2c3e50' }}>🔥 ดีลสุดร้อนแรง</h3>
-              <p style={{ opacity: '0.7' }}>สินค้าลดราคาพิเศษ จำนวนจำกัด!</p>
-            </div>
-            {hotDeals.map(deal => (
-              <div key={deal.id} className="col-lg-6 col-xl-3 mb-4">
-                <div className="card h-100 shadow-lg border-0" style={{
-                  borderRadius: '20px',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease'
-                }} onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-10px)';
-                }} onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}>
-                  {/* Product Image Area */}
-                  <div className="position-relative" style={{
-                    height: '200px',
-                    background: `linear-gradient(135deg, ${deal.colors[0]}20 0%, ${deal.colors[1]}20 100%)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <div style={{ fontSize: '4rem' }}>{deal.image}</div>
-                    
-                    {/* Discount Badge */}
-                    <div className="position-absolute top-0 start-0 m-3">
-                      <span className="badge" style={{
-                        background: 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)',
-                        fontSize: '1rem',
-                        padding: '8px 15px',
-                        borderRadius: '20px'
-                      }}>
-                        -{deal.discount}%
-                      </span>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="position-absolute top-0 end-0 m-3">
-                      {deal.tags.map((tag, index) => (
-                        <span key={index} className="badge me-1 mb-1" style={{
-                          background: tag === 'Hot' ? '#ff6b35' : 
-                                     tag === 'Limited' ? '#e74c3c' : 
-                                     tag === 'New' ? '#27ae60' :
-                                     tag === 'Popular' ? '#3498db' :
-                                     tag === 'Classic' ? '#9b59b6' : '#f39c12',
-                          fontSize: '0.7rem',
-                          padding: '4px 8px'
-                        }}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Time Left */}
-                    <div className="position-absolute bottom-0 start-0 m-3">
-                      <span className="badge bg-dark" style={{
-                        fontSize: '0.8rem',
-                        padding: '6px 12px',
-                        borderRadius: '15px'
-                      }}>
-                        ⏰ {deal.timeLeft}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="card-body p-4">
-                    <h5 className="fw-bold mb-3">{deal.title}</h5>
-                    
-                    {/* Price */}
-                    <div className="mb-3">
-                      <span className="h5 fw-bold text-danger me-2">
-                        ฿{deal.discountPrice.toLocaleString()}
-                      </span>
-                      <span className="text-muted text-decoration-line-through">
-                        ฿{deal.originalPrice.toLocaleString()}
-                      </span>
-                    </div>
-
-                    {/* Stock Progress */}
-                    <div className="mb-3">
-                      <div className="d-flex justify-content-between mb-1">
-                        <small>คงเหลือ: {deal.stock} ชิ้น</small>
-                        <small>ขายแล้ว: {deal.sold} ชิ้น</small>
-                      </div>
-                      <div className="progress" style={{ height: '6px', borderRadius: '3px' }}>
-                        <div 
-                          className="progress-bar" 
-                          style={{ 
-                            width: `${(deal.sold / (deal.sold + deal.stock)) * 100}%`,
-                            background: 'linear-gradient(90deg, #ff6b35, #f7931e)'
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <button className="btn w-100 fw-bold" style={{
-                      background: `linear-gradient(135deg, ${deal.colors[0]} 0%, ${deal.colors[1]} 100%)`,
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '15px',
-                      padding: '12px'
-                    }}>
-                      🛒 เพิ่มในตะกร้า
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Flash Sales Section */}
         {activeTab === 'flash-sales' && (
@@ -532,7 +436,22 @@ export default function PromotionsPage() {
                       <div className="card-body p-4">
                         <div className="d-flex justify-content-between align-items-start mb-2">
                           <h6 className="fw-bold mb-0">{coupon.title}</h6>
-                          <span className="badge bg-light text-dark">{coupon.code}</span>
+                          <span 
+                            className="badge bg-light text-dark"
+                            style={{
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onClick={() => copyCouponCode(coupon.code)}
+                            onMouseEnter={(e) => {
+                              e.target.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.transform = 'scale(1)';
+                            }}
+                          >
+                            {coupon.code}
+                          </span>
                         </div>
                         
                         <p className="text-muted mb-3" style={{ fontSize: '0.9rem' }}>
@@ -557,14 +476,19 @@ export default function PromotionsPage() {
                         
                         <div className="d-flex justify-content-between align-items-center">
                           <small className="text-muted">หมดอายุ: {coupon.expiry}</small>
-                          <button className="btn btn-sm fw-bold" style={{
-                            background: coupon.color,
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '10px',
-                            padding: '6px 15px'
-                          }}>
-                            คัดลอก
+                          <button 
+                            className="btn btn-sm fw-bold position-relative" 
+                            style={{
+                              background: copiedCode === coupon.code ? '#28a745' : coupon.color,
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: '10px',
+                              padding: '6px 15px',
+                              transition: 'all 0.3s ease'
+                            }}
+                            onClick={() => copyCouponCode(coupon.code)}
+                          >
+                            {copiedCode === coupon.code ? '✓ คัดลอกแล้ว!' : 'คัดลอก'}
                           </button>
                         </div>
                       </div>
@@ -638,7 +562,7 @@ export default function PromotionsPage() {
           </div>
         )}
 
-        {/* Newsletter Signup */}
+        {/* Code Input Section */}
         <div className="row mb-5">
           <div className="col-12">
             <div className="card shadow-lg border-0" style={{
@@ -647,17 +571,17 @@ export default function PromotionsPage() {
               color: 'white'
             }}>
               <div className="card-body p-5 text-center">
-                <h3 className="fw-bold mb-3">📧 รับข่าวสารโปรโมชัน</h3>
+                <h3 className="fw-bold mb-3">🎫 กรอกโค้ดส่วนลด</h3>
                 <p className="mb-4" style={{ opacity: '0.9' }}>
-                  สมัครรับข่าวสารเพื่อไม่พลาดโปรโมชันพิเศษและสินค้าใหม่
+                  มีโค้ดส่วนลดอยู่แล้ว? กรอกที่นี่เพื่อรับส่วนลดทันที
                 </p>
                 <div className="row justify-content-center">
                   <div className="col-md-6">
                     <div className="input-group">
                       <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        placeholder="อีเมลของคุณ..."
+                        placeholder="กรอกโค้ดส่วนลด..."
                         style={{
                           borderRadius: '25px 0 0 25px',
                           border: 'none',
@@ -672,7 +596,7 @@ export default function PromotionsPage() {
                           border: 'none'
                         }}
                       >
-                        สมัคร
+                        ใช้โค้ด
                       </button>
                     </div>
                   </div>
@@ -681,30 +605,47 @@ export default function PromotionsPage() {
             </div>
           </div>
         </div>
+
+        {/* Copied notification */}
+        {copiedCode && (
+          <div 
+            className="position-fixed" 
+            style={{
+              bottom: '20px',
+              right: '20px',
+              zIndex: 1050,
+              animation: 'fadeInOut 2s ease-in-out'
+            }}
+          >
+            <div className="alert alert-success alert-dismissible shadow-lg border-0" style={{
+              borderRadius: '15px',
+              background: 'linear-gradient(135deg, #28a745, #20c997)',
+              color: 'white',
+              border: 'none'
+            }}>
+              <strong>✓ คัดลอกโค้ดสำเร็จ!</strong><br />
+              โค้ด <strong>{copiedCode}</strong> ถูกคัดลอกไปยังคลิปบอร์ดแล้ว
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Footer CTA */}
-      <div className="container-fluid py-5" style={{
-        background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)',
-        color: 'white',
-        textAlign: 'center'
-      }}>
-        <div className="container">
-          <h3 className="fw-bold mb-3">🛍️ ช้อปปิ้งได้ทุกที่ ทุกเวลา</h3>
-          <p className="mb-4">ดาวน์โหลดแอพมือถือเพื่อรับโปรโมชันพิเศษเพิ่มเติม</p>
-          <div className="d-flex gap-3 justify-content-center flex-wrap">
-            <Link href="/app-download" className="btn btn-light btn-lg px-4 py-3 rounded-pill fw-bold">
-              📱 ดาวน์โหลดแอพ
-            </Link>
-            <Link href="/loyalty" className="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-bold">
-              🎁 โปรแกรมสะสมแต้ม
-            </Link>
-            <Link href="/help" className="btn btn-outline-light btn-lg px-4 py-3 rounded-pill fw-bold">
-              ❓ ช่วยเหลือ
-            </Link>
-          </div>
-        </div>
-      </div>
+      <style jsx>{`
+        @keyframes fadeInOut {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          10%, 90% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+        }
+      `}</style>
     </div>
   );
 }
