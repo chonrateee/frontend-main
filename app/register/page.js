@@ -63,7 +63,7 @@ export default function Register() {
     if (validate()) {
       setIsLoading(true);
       try {
-        const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users', {
+        const res = await fetch('https://backend-nextjs-virid.vercel.app', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
