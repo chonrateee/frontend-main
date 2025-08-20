@@ -72,19 +72,6 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn, onLogout }) {
     router.push('/');
   };
 
-  // ฟังก์ชันสำหรับทดสอบ (จะลบออกในการใช้งานจริง)
-  const handleTestLogin = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userEmail', 'test@example.com');
-      
-      window.dispatchEvent(new CustomEvent('loginStatusChanged', { 
-        detail: { isLoggedIn: true, email: 'test@example.com' } 
-      }));
-    }
-    setIsLoggedIn(true);
-  };
-
   return (
     <nav className="navbar navbar-expand-lg shadow-lg" style={{
       background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%)',
@@ -233,22 +220,6 @@ export default function Navbar({ isLoggedIn: propIsLoggedIn, onLogout }) {
                 >
                   🔐 เข้าสู่ระบบ
                 </Link>
-                
-                {/* ปุ่มทดสอบสำหรับ Demo */}
-                <button 
-                  onClick={handleTestLogin}
-                  className="btn text-white fw-semibold px-3 py-1 border-1 rounded-pill"
-                  style={{
-                    borderColor: 'rgba(52, 152, 219, 0.8)',
-                    background: 'rgba(52, 152, 219, 0.2)',
-                    backdropFilter: 'blur(8px)',
-                    transition: 'all 0.3s ease',
-                    fontSize: '12px'
-                  }}
-                  title="ทดสอบล็อกอิน (Demo)"
-                >
-                  🧪 Test Login
-                </button>
                 
                 <Link 
                   href="/register" 
