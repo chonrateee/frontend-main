@@ -1,251 +1,696 @@
 'use client';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useState } from "react";
 
-export default function BrandsPage() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [hoveredBrand, setHoveredBrand] = useState(null);
-
-  const brands = [
-    {
-      id: 1,
-      name: 'Nike',
-      logo: '✔️',
-      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop&crop=center',
-      description: 'Just Do It - แบรนด์กีฬาชั้นนำระดับโลก',
-      
-      category: 'sports',
-      colors: ['#000000', '#ff6b35'],
-      founded: '1964',
-      country: 'USA',
-      specialties: ['รองเท้าวิ่ง', 'บาสเกตบอล', 'ฟุตบอล'],
-      popularModels: ['Air Max', 'Air Jordan', 'React'],
-      priceRange: '2,500 - 8,000 บาท'
+export default function VansStore() {
+  const vansShoes = [
+    { 
+      id: 1, 
+      title: "Vans Old Skool", 
+      price: 2600, 
+      img: "/images/brands/vans/V1.jpg",
+      rating: 4.7, 
+      reviews: 2847,
+      details: [
+        "วัสดุ: ผ้าใบ Canvas และหนังกลับ Suede คุณภาพสูง",
+        "พื้นรองเท้า: ยาง Waffle Sole Grip ดีเยี่ยม",
+        "น้ำหนัก: 340 กรัม",
+        "เหมาะสำหรับ: Skateboarding และ Street Style",
+        "สีที่มีจำหน่าย: ดำ-ขาว, กรมท่า, แดง-ขาว, ขาว",
+        "จุดเด่น: ดีไซน์ Iconic Side Stripe ทนทาน สไตล์ Skate แท้"
+      ]
     },
-    {
-      id: 2,
-      name: 'Adidas',
-      logo: '⚡',
-      image: '/images/Card/22.jpg',
-      description: 'Impossible is Nothing - นวัตกรรมและประสิทธิภาพ',
-    
-      category: 'sports',
-      colors: ['#000000', '#ffffff'],
-      founded: '1949',
-      country: 'Germany',
-      specialties: ['ฟุตบอล', 'วิ่ง', 'ไลฟ์สไตล์'],
-      popularModels: ['Ultraboost', 'Stan Smith', 'Gazelle'],
-      priceRange: '2,200 - 7,500 บาท'
-    },
-    {
-      id: 3,
-      name: 'Converse',
-      logo: '⭐',
-      image: 'https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=400&h=300&fit=crop&crop=center',
-      description: 'รองเท้าผ้าใบคลาสสิกที่เหนือกาลเวลา',
-      
-      category: 'casual',
-      colors: ['#e31e24', '#ffffff'],
-      founded: '1908',
-      country: 'USA',
-      specialties: ['Chuck Taylor', 'แฟชั่น', 'คลาสสิก'],
-      popularModels: ['Chuck 70', 'All Star', 'One Star'],
-      priceRange: '1,800 - 4,500 บาท'
-    },
-    {
-      id: 4,
-      name: 'Vans',
-      logo: '🔥',
-      image: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=400&h=300&fit=crop&crop=center',
-      description: 'Off The Wall - วัฒนธรรมสเก็ตบอร์ดและแฟชั่น',
-      
-      category: 'lifestyle',
-      colors: ['#000000', '#ff6b00'],
-      founded: '1966',
-      country: 'USA',
-      specialties: ['สเก็ตบอร์ด', 'ไลฟ์สไตล์', 'สตรีท'],
-      popularModels: ['Old Skool', 'Authentic', 'Slip-On'],
-      priceRange: '1,900 - 4,200 บาท'
+    { 
+      id: 2, 
+      title: "Vans Slip-On Checkerboard", 
+      price: 2300, 
+      img: "/images/brands/vans/V2.jpg",
+      rating: 4.5, 
+      reviews: 1924,
+      details: [
+        "วัสดุ: ผ้าใบ Canvas ลายหมากรุกคลาสสิค",
+        "พื้นรองเท้า: ยาง Waffle Sole แบบดั้งเดิม",
+        "น้ำหนัก: 310 กรัม",
+        "เหมาะสำหรับ: ใส่ประจำวัน Casual ง่ายสะดวก",
+        "สีที่มีจำหน่าย: ดำ-ขาว, น้ำเงิน-ขาว, แดง-ขาว",
+        "จุดเด่น: ไม่มีเชือก ใส่ถอดง่าย ลายหมากรุกไม่เบื่อ"
+      ]
     }
   ];
 
-  const categories = [
-    { id: 'all', name: 'ทั้งหมด', icon: '🎯' },
-    { id: 'sports', name: 'กีฬา', icon: '⚽' },
-    { id: 'casual', name: 'ลำลอง', icon: '👟' },
-    { id: 'lifestyle', name: 'ไลฟ์สไตล์', icon: '🎨' }
-  ];
+  const [favorites, setFavorites] = useState([]);
+  const [selectedShoe, setSelectedShoe] = useState(null);
 
-  const filteredBrands = selectedCategory === 'all' 
-    ? brands 
-    : brands.filter(brand => brand.category === selectedCategory);
+  const toggleFavorite = (id) => {
+    setFavorites(prev => 
+      prev.includes(id) 
+        ? prev.filter(fav => fav !== id)
+        : [...prev, id]
+    );
+  };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-      {/* Hero Section */}
-      <div className="container-fluid py-5" style={{ background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%)', color: 'white', textAlign: 'center', marginBottom: '40px' }}>
-        <div className="container">
-          <h1 className="display-4 fw-bold mb-4" style={{ textShadow: '0 4px 8px rgba(0,0,0,0.3)', letterSpacing: '2px' }}>
-            🏷️ แบรนด์ยอดนิยม
-          </h1>
-          <p className="lead mb-4" style={{ fontSize: '1.3rem', opacity: 0.9 }}>
-            เลือกซื้อรองเท้าจากแบรนด์ชั้นนำทั่วโลก พร้อมรับประกันคุณภาพ
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
+      {/* Header */}
+      <div style={{ 
+        background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e53e3e 100%)', 
+        color: 'white', 
+        padding: '64px 16px',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 30% 40%, rgba(229, 62, 62, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)'
+        }}></div>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', marginBottom: '24px' }}>
+            <div style={{ 
+              fontSize: '56px',
+              background: 'linear-gradient(45deg, #e53e3e, #f56565)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: 'drop-shadow(0 0 10px rgba(229, 62, 62, 0.5))'
+            }}>
+              🛹
+            </div>
+            <h1 style={{ 
+              fontSize: '56px', 
+              fontWeight: 'bold', 
+              margin: 0,
+              background: 'linear-gradient(45deg, #ffffff, #f8fafc)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              textShadow: '0 0 30px rgba(255, 255, 255, 0.5)',
+              letterSpacing: '2px'
+            }}>
+              VANS
+            </h1>
+          </div>
+          <p style={{ 
+            fontSize: '24px', 
+            color: '#e53e3e', 
+            margin: 0,
+            fontWeight: '600',
+            letterSpacing: '1px',
+            textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+          }}>
+            Off The Wall
           </p>
-          
+          <div style={{ 
+            marginTop: '32px', 
+            display: 'flex', 
+            justifyContent: 'center', 
+            gap: '24px',
+            flexWrap: 'wrap'
+          }}>
+            <span style={{ 
+              background: 'rgba(255, 255, 255, 0.1)', 
+              padding: '8px 16px', 
+              borderRadius: '20px',
+              fontSize: '14px',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              ✓ Authentic Skate Culture
+            </span>
+            <span style={{ 
+              background: 'rgba(255, 255, 255, 0.1)', 
+              padding: '8px 16px', 
+              borderRadius: '20px',
+              fontSize: '14px',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              ✓ Street Style Icon
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="container">
-        {/* Category Filter */}
-        <div className="row mb-5">
-          <div className="col-12">
-            <div className="card shadow-lg border-0" style={{ background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', borderRadius: '20px' }}>
-              <div className="card-body p-4">
-                <h5 className="fw-bold mb-3">🎯 กรองตามหมวดหมู่</h5>
-                <div className="d-flex flex-wrap gap-2">
-                  {categories.map(category => (
-                    <button
-                      key={category.id}
-                      className="btn rounded-pill px-4 py-2 fw-semibold"
-                      style={{
-                        background: selectedCategory === category.id ? 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)' : 'rgba(52, 152, 219, 0.1)',
-                        color: selectedCategory === category.id ? 'white' : '#3498db',
-                        border: selectedCategory === category.id ? 'none' : '2px solid #3498db20',
-                        transition: 'all 0.3s ease'
-                      }}
-                      onClick={() => setSelectedCategory(category.id)}
-                    >
-                      {category.icon} {category.name}
-                    </button>
-                  ))}
+      {/* Products */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '64px 16px' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', 
+          gap: '40px' 
+        }}>
+          {vansShoes.map((shoe) => (
+            <div key={shoe.id} style={{ 
+              backgroundColor: 'white', 
+              borderRadius: '20px', 
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(229, 62, 62, 0.1)'
+            }}>
+              {/* Image Area */}
+              <div style={{ 
+                position: 'relative',
+                height: '320px', 
+                background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e53e3e 100%)', 
+                padding: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%)'
+                }}></div>
+                <img 
+                  src={shoe.img} 
+                  alt={shoe.title}
+                  style={{ 
+                    height: '100%', 
+                    maxHeight: '240px', 
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))',
+                    zIndex: 1,
+                    position: 'relative'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+                <div style={{ 
+                  width: '128px', 
+                  height: '128px', 
+                  background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                  borderRadius: '16px',
+                  display: 'none',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '48px',
+                  boxShadow: '0 10px 20px rgba(229, 62, 62, 0.3)'
+                }}>
+                  🛹
                 </div>
+                
+                {/* Heart Button */}
+                <button
+                  onClick={() => toggleFavorite(shoe.id)}
+                  style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    width: '48px',
+                    height: '48px',
+                    background: favorites.includes(shoe.id) 
+                      ? 'linear-gradient(135deg, #e53e3e, #f56565)' 
+                      : 'rgba(255, 255, 255, 0.9)',
+                    borderRadius: '50%',
+                    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                    transition: 'all 0.3s ease',
+                    backdropFilter: 'blur(10px)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+                  }}
+                >
+                  {favorites.includes(shoe.id) ? '❤️' : '🤍'}
+                </button>
+
+                {/* SALE Badge for first item */}
+                {shoe.id === 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                    color: 'white',
+                    padding: '6px 16px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 4px 12px rgba(229, 62, 62, 0.4)',
+                    letterSpacing: '1px'
+                  }}>
+                    SALE
+                  </div>
+                )}
+
+                {/* FEATURED Badge for second item */}
+                {shoe.id === 2 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+                    color: 'white',
+                    padding: '6px 16px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 4px 12px rgba(245, 158, 11, 0.4)',
+                    letterSpacing: '1px'
+                  }}>
+                    FEATURED
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Brands Grid */}
-        <div className="row">
-          {filteredBrands.map((brand) => (
-            <div key={brand.id} className="col-lg-6 col-xl-6 mb-5">
-              <div
-                className="card h-100 shadow-lg border-0"
-                style={{
-                  borderRadius: '25px',
-                  overflow: 'hidden',
-                  transition: 'all 0.4s ease',
-                  transform: hoveredBrand === brand.id ? 'translateY(-15px) scale(1.02)' : 'translateY(0) scale(1)',
-                  background: hoveredBrand === brand.id ? `linear-gradient(135deg, ${brand.colors[0]} 0%, ${brand.colors[1]} 100%)` : 'rgba(255,255,255,0.95)',
-                  color: hoveredBrand === brand.id ? 'white' : '#2c3e50'
-                }}
-                onMouseEnter={() => setHoveredBrand(brand.id)}
-                onMouseLeave={() => setHoveredBrand(null)}
-              >
-                {/* Brand Image */}
-                <div className="position-relative" style={{ height: '200px' }}>
-                  <img
-                    src={brand.image}
-                    alt={`${brand.name} รองเท้า`}
-                    className="w-100 h-100"
-                    style={{ objectFit: 'cover', transition: 'transform 0.5s ease', transform: hoveredBrand === brand.id ? 'scale(1.1)' : 'scale(1)' }}
-                    loading="lazy"
-                  />
-                  <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: hoveredBrand === brand.id ? `linear-gradient(45deg, ${brand.colors[0]}40, ${brand.colors[1]}40)` : 'rgba(0,0,0,0.1)', transition: 'all 0.3s ease' }}></div>
-
-                  {/* Brand Logo Overlay */}
-                  <div className="position-absolute" style={{ bottom: '-20px', left: '50%', transform: 'translateX(-50%)', width: '50px', height: '50px', background: `linear-gradient(135deg, ${brand.colors[0]}, ${brand.colors[1]})`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', border: '4px solid white' }}>
-                    <span style={{ fontSize: '1.5rem' }}>{brand.logo}</span>
+              {/* Product Info */}
+              <div style={{ padding: '32px' }}>
+                <h3 style={{ 
+                  fontSize: '24px', 
+                  fontWeight: 'bold', 
+                  color: '#1f2937', 
+                  margin: '0 0 16px 0'
+                }}>
+                  {shoe.title}
+                </h3>
+                
+                {/* Rating */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  marginBottom: '20px'
+                }}>
+                  <div style={{ color: '#f59e0b', fontSize: '16px' }}>
+                    {'★'.repeat(Math.floor(shoe.rating))}
+                    {'☆'.repeat(5 - Math.floor(shoe.rating))}
                   </div>
+                  <span style={{ color: '#6b7280', fontSize: '14px' }}>
+                    {shoe.rating} ({shoe.reviews.toLocaleString()} รีวิว)
+                  </span>
                 </div>
 
-                {/* Brand Header */}
-                <div className="card-header border-0 p-4 pt-5" style={{ background: 'transparent' }}>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="text-center w-100">
-                      <h4 className="fw-bold mb-1">{brand.name}</h4>
-                      <small style={{ opacity: hoveredBrand === brand.id ? 0.9 : 0.7 }}>{brand.country} • {brand.founded}</small>
-                    </div>
-                    <div className="position-absolute top-0 end-0 m-3">
-                      <span className="badge rounded-pill px-3 py-2" style={{ background: hoveredBrand === brand.id ? 'rgba(255,255,255,0.2)' : 'rgba(52, 152, 219, 0.1)', color: hoveredBrand === brand.id ? 'white' : '#3498db', fontSize: '0.9rem' }}>{brand.products} รุ่น</span>
-                    </div>
+                {/* Price */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  gap: '16px', 
+                  marginBottom: '20px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                    <span style={{ 
+                      fontSize: '32px', 
+                      fontWeight: 'bold', 
+                      background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}>
+                      {shoe.price.toLocaleString()}
+                    </span>
+                    <span style={{ fontSize: '18px', color: '#6b7280' }}>฿</span>
                   </div>
+                  {shoe.id === 1 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ 
+                        fontSize: '16px', 
+                        color: '#9ca3af', 
+                        textDecoration: 'line-through' 
+                      }}>
+                        2,900 ฿
+                      </span>
+                      <span style={{ 
+                        fontSize: '12px', 
+                        color: '#10b981',
+                        fontWeight: '600',
+                        background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
+                        padding: '2px 8px',
+                        borderRadius: '12px'
+                      }}>
+                        ประหยัด 300 ฿
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Brand Body */}
-                <div className="card-body px-4 pb-4">
-                  <p className="mb-3 text-center" style={{ opacity: hoveredBrand === brand.id ? 0.9 : 0.7, lineHeight: 1.6 }}>{brand.description}</p>
+                {/* Brief Description */}
+                <p style={{ 
+                  color: '#6b7280', 
+                  marginBottom: '28px',
+                  lineHeight: '1.6',
+                  fontSize: '15px'
+                }}>
+                  {shoe.id === 1 ? 
+                    "รองเท้า Vans Old Skool คลาสสิคที่มาพร้อมกับ Side Stripe สุดไอคอนิค ออกแบบมาสำหรับ Skater และคนรักสไตล์ Street Wear" :
+                    "รองเท้า Vans Slip-On ลายหมากรุกสุดคลาสสิค ไม่มีเชือกผูก ใส่ง่าย ถอดง่าย เหมาะสำหรับการใช้งานประจำวัน"
+                  }
+                </p>
 
-                  {/* Specialties */}
-                  <div className="mb-3">
-                    <h6 className="fw-bold mb-2">🎯 ความเชี่ยวชาญ</h6>
-                    <div className="d-flex flex-wrap gap-1 justify-content-center">
-                      {brand.specialties.map((specialty, index) => (
-                        <span key={index} className="badge rounded-pill px-2 py-1" style={{ background: hoveredBrand === brand.id ? 'rgba(255,255,255,0.15)' : 'rgba(52, 152, 219, 0.1)', color: hoveredBrand === brand.id ? 'white' : '#3498db', fontSize: '0.75rem' }}>{specialty}</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Popular Models */}
-                  <div className="mb-3">
-                    <h6 className="fw-bold mb-2">🔥 รุ่นยอดนิยม</h6>
-                    <div className="d-flex flex-wrap gap-1 justify-content-center">
-                      {brand.popularModels.map((model, index) => (
-                        <span key={index} className="badge rounded-pill px-2 py-1" style={{ background: hoveredBrand === brand.id ? 'rgba(255,255,255,0.15)' : 'rgba(231, 76, 60, 0.1)', color: hoveredBrand === brand.id ? 'white' : '#e74c3c', fontSize: '0.75rem' }}>{model}</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Price Range */}
-                  <div className="mb-4 text-center">
-                    <h6 className="fw-bold mb-1">💰 ช่วงราคา</h6>
-                    <p className="mb-0" style={{ opacity: hoveredBrand === brand.id ? 0.9 : 0.7, fontSize: '1.1rem', fontWeight: 600 }}>{brand.priceRange}</p>
-                  </div>
-
-                  {/* Action Button */}
-                  <Link href={`/brands/${brand.name.toLowerCase()}`} className="btn w-100 fw-bold" style={{ background: hoveredBrand === brand.id ? 'rgba(255,255,255,0.2)' : `linear-gradient(135deg, ${brand.colors[0]} 0%, ${brand.colors[1]} 100%)`, color: 'white', border: hoveredBrand === brand.id ? '2px solid rgba(255,255,255,0.3)' : 'none', borderRadius: '15px', padding: '12px', textDecoration: 'none', transition: 'all 0.3s ease' }}>
-                    ดูสินค้า {brand.name} →
-                  </Link>
-                </div>
+                {/* Button */}
+                <button 
+                  onClick={() => setSelectedShoe(shoe)}
+                  style={{
+                    width: '100%',
+                    background: 'linear-gradient(135deg, #000000 0%, #e53e3e 100%)',
+                    color: 'white',
+                    padding: '14px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 12px rgba(229, 62, 62, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 8px 20px rgba(229, 62, 62, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(229, 62, 62, 0.3)';
+                  }}
+                >
+                  ดูรายละเอียดเพิ่มเติม
+                </button>
               </div>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Brand Comparison Section */}
-        <div className="row mb-5">
-          <div className="col-12">
-            <div className="card shadow-lg border-0" style={{ background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 100%)', borderRadius: '20px', color: 'white' }}>
-              <div className="card-body p-5">
-                <h3 className="fw-bold mb-4 text-center">📊 เปรียบเทียบแบรนด์</h3>
-                <div className="table-responsive">
-                  <table className="table table-dark table-hover">
-                    <thead>
-                      <tr>
-                        <th>แบรนด์</th>
-                        <th>จำนวนรุ่น</th>
-                        <th>ช่วงราคา</th>
-                        <th>หมวดหมู่หลัก</th>
-                        <th>ก่อตั้ง</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {brands.map(brand => (
-                        <tr key={brand.id}>
-                          <td><strong>{brand.logo} {brand.name}</strong></td>
-                          <td>{brand.products} รุ่น</td>
-                          <td>{brand.priceRange}</td>
-                          <td><span className="badge bg-primary rounded-pill">{categories.find(c => c.id === brand.category)?.name}</span></td>
-                          <td>{brand.founded}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+      {/* Modal */}
+      {selectedShoe && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px'
+          }}
+          onClick={() => setSelectedShoe(null)}
+        >
+          <div 
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '20px',
+              maxWidth: '800px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              border: '1px solid rgba(229, 62, 62, 0.1)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{ 
+              padding: '32px 32px 24px 32px', 
+              background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+              borderBottom: '1px solid #e5e7eb'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'start'
+              }}>
+                <div>
+                  <h2 style={{ 
+                    fontSize: '28px', 
+                    fontWeight: 'bold', 
+                    color: '#1f2937', 
+                    margin: '0 0 12px 0'
+                  }}>
+                    {selectedShoe.title}
+                  </h2>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px'
+                  }}>
+                    <div style={{ color: '#f59e0b', fontSize: '16px' }}>
+                      {'★'.repeat(Math.floor(selectedShoe.rating))}
+                      {'☆'.repeat(5 - Math.floor(selectedShoe.rating))}
+                    </div>
+                    <span style={{ color: '#6b7280', fontSize: '14px' }}>
+                      {selectedShoe.rating} ({selectedShoe.reviews.toLocaleString()} รีวิว)
+                    </span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setSelectedShoe(null)}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                    borderRadius: '50%',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 8px 16px rgba(229, 62, 62, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div style={{ padding: '32px' }}>
+              {/* Image */}
+              <div style={{ 
+                background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e53e3e 100%)', 
+                borderRadius: '16px', 
+                padding: '32px', 
+                marginBottom: '32px',
+                display: 'flex',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%)'
+                }}></div>
+                <img 
+                  src={selectedShoe.img} 
+                  alt={selectedShoe.title}
+                  style={{ 
+                    height: '200px', 
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))',
+                    zIndex: 1,
+                    position: 'relative'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextElementSibling.style.display = 'flex';
+                  }}
+                />
+                <div style={{ 
+                  width: '96px', 
+                  height: '96px', 
+                  background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                  borderRadius: '16px',
+                  display: 'none',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '32px'
+                }}>
+                  🛹
                 </div>
               </div>
+
+              {/* Price */}
+              <div style={{ 
+                textAlign: 'center', 
+                marginBottom: '32px'
+              }}>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  justifyContent: 'center', 
+                  gap: '16px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                    <span style={{ 
+                      fontSize: '48px', 
+                      fontWeight: 'bold', 
+                      background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}>
+                      {selectedShoe.price.toLocaleString()}
+                    </span>
+                    <span style={{ fontSize: '24px', color: '#6b7280' }}>฿</span>
+                  </div>
+                  {selectedShoe.id === 1 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ 
+                        fontSize: '18px', 
+                        color: '#9ca3af', 
+                        textDecoration: 'line-through' 
+                      }}>
+                        2,900 ฿
+                      </span>
+                      <span style={{ 
+                        fontSize: '14px', 
+                        color: '#10b981',
+                        fontWeight: '600',
+                        background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)',
+                        padding: '4px 12px',
+                        borderRadius: '16px'
+                      }}>
+                        ประหยัด 300 ฿
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Details */}
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ 
+                  fontWeight: 'bold', 
+                  fontSize: '20px', 
+                  color: '#1f2937', 
+                  margin: '0 0 20px 0'
+                }}>
+                  รายละเอียดสินค้า
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {selectedShoe.details.map((item, index) => (
+                    <div key={index} style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      gap: '16px', 
+                      padding: '16px', 
+                      background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(229, 62, 62, 0.1)'
+                    }}>
+                      <span style={{ 
+                        width: '8px', 
+                        height: '8px', 
+                        background: 'linear-gradient(135deg, #e53e3e, #f56565)',
+                        borderRadius: '50%',
+                        marginTop: '8px',
+                        flexShrink: 0
+                      }}></span>
+                      <span style={{ color: '#374151', lineHeight: '1.6' }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Additional Info - Vans specific */}
+              <div style={{ 
+                background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)', 
+                borderRadius: '16px', 
+                padding: '24px', 
+                marginBottom: '32px',
+                border: '1px solid rgba(229, 62, 62, 0.1)'
+              }}>
+                <h4 style={{ 
+                  fontWeight: '600', 
+                  color: '#1f2937', 
+                  margin: '0 0 16px 0',
+                  fontSize: '18px'
+                }}>
+                  ข้อมูลเพิ่มเติม
+                </h4>
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '12px', 
+                  fontSize: '15px', 
+                  color: '#374151'
+                }}>
+                  <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
+                    รับประกันคุณภาพจาก Vans แท้ 100%
+                  </p>
+                  <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
+                    จัดส่งฟรีเมื่อซื้อครบ 1,500 บาท
+                  </p>
+                  <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
+                    เปลี่ยนคืนได้ภายใน 14 วัน
+                  </p>
+                  <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
+                    ผลิตโดยโรงงานมาตรฐาน Skate Culture
+                  </p>
+                  <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
+                    Waffle Sole รูปแบบดั้งเดิม เกรียบดีเยี่ยม
+                  </p>
+                </div>
+              </div>
+
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedShoe(null)}
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(135deg, #000000 0%, #e53e3e 100%)',
+                  color: 'white',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 8px 20px rgba(229, 62, 62, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                ปิดหน้าต่าง
+              </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

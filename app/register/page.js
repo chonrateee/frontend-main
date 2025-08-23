@@ -1,292 +1,615 @@
-'use client';
+'use client'
+import { useState } from 'react'
+import Swal from 'sweetalert2'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
-import { useState, useEffect, useMemo } from 'react';
+export default function UserRegister() {
+  const router = useRouter()
 
-export default function Register() {
-  const [firstname, setFirstname] = useState('');
-  const [fullname, setFullname] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    firstname: '',
+    fullname: '',
+    lastname: '',
+    username: '',
+    password: '',
+    sex: ''
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  // floating background effect
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-  // password strength
-  const passwordScore = useMemo(() => {
-    const p = password || "";
-    let score = 0;
-    if (p.length >= 8) score++;
-    if (/[A-Z]/.test(p)) score++;
-    if (/[a-z]/.test(p)) score++;
-    if (/\d/.test(p)) score++;
-    if (/[^A-Za-z0-9]/.test(p)) score++;
-    return Math.min(score, 4);
-  }, [password]);
+  const validateForm = () => {
+    const { firstname, fullname, lastname, username, password } = formData
 
-  const strengthText = ["อ่อนมาก", "อ่อน", "ปานกลาง", "ดี", "แข็งแรง"][passwordScore];
-  const strengthWidth = ["5%", "25%", "50%", "75%", "100%"][passwordScore];
-  const strengthColors = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#16a34a"];
-
-  // validate
-  const validate = () => {
-    const next = {};
-    if (!firstname) next.firstname = "กรุณาเลือกคำนำหน้าชื่อ";
-    if (!fullname.trim()) next.fullname = "กรุณากรอกชื่อ";
-    if (!lastname.trim()) next.lastname = "กรุณากรอกนามสกุล";
-    if (!username.trim()) next.username = "กรุณากรอกชื่อผู้ใช้";
-    else if (username.trim().length < 3) next.username = "อย่างน้อย 3 ตัวอักษร";
-    if (!phone.trim()) next.phone = "กรุณากรอกเบอร์โทรศัพท์";
-    else if (!/^[0-9]{10}$/.test(phone.replace(/-/g, ''))) next.phone = "เบอร์โทรศัพท์ไม่ถูกต้อง";
-    if (!password) next.password = "กรุณากรอกรหัสผ่าน"; // ✅ ไม่เช็คจำนวนตัวอักษรแล้ว
-
-    setErrors(next);
-    return Object.keys(next).length === 0;
-  };
-
-  const handleSubmit = async () => {
-    if (validate()) {
-      setIsLoading(true);
-      try {
-        const res = await fetch('https://backend-nextjs-virid.vercel.app', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            firstname, 
-            fullname, 
-            lastname, 
-            username, 
-            password,
-            phone,
-          }),
-        });
-        const result = await res.json();
-        console.log(result);
-        
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        setSubmitted(true);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error:', error);
-        setIsLoading(false);
-      }
+    if (!firstname || !fullname || !lastname || !username || !password) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'กรุณากรอกข้อมูล',
+        text: 'กรุณากรอกข้อมูลในช่องที่จำเป็นให้ครบถ้วน',
+        confirmButtonColor: '#8B1538'
+      })
+      return false
     }
-  };
 
-  const clearError = (field) => {
-    setErrors(prev => ({ ...prev, [field]: '' }));
-  };
+    if (username.length < 3) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'ชื่อผู้ใช้ไม่ถูกต้อง',
+        text: 'ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร',
+        confirmButtonColor: '#8B1538'
+      })
+      return false
+    }
 
-  // -------- style เดิม --------
-  const containerStyle = {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a1a 0%, #654321 30%, #8B4513 70%, #1a1a1a 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '2rem 1rem',
-    position: 'relative',
-    overflow: 'hidden',
-    fontFamily: 'system-ui, -apple-system, sans-serif'
-  };
+    if (password.length < 6) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'รหัสผ่านไม่ถูกต้อง',
+        text: 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร',
+        confirmButtonColor: '#8B1538'
+      })
+      return false
+    }
 
-  const backgroundParticleStyle = (size, color, left, top, animation) => ({
-    position: 'absolute',
-    width: size,
-    height: size,
-    background: `radial-gradient(circle, ${color}20 0%, transparent 70%)`,
-    borderRadius: '50%',
-    filter: 'blur(40px)',
-    left: left,
-    top: top,
-    animation: animation,
-    pointerEvents: 'none'
-  });
+    return true
+  }
 
-  const formContainerStyle = {
-    position: 'relative',
-    zIndex: 10,
-    width: '100%',
-    maxWidth: '32rem',
-    background: 'rgba(255, 255, 255, 0.05)',
-    backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '1.5rem',
-    padding: '2rem',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-    transition: 'transform 0.3s ease'
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (!validateForm()) return
 
-  const logoContainerStyle = { display: 'flex', justifyContent: 'center', marginBottom: '2rem', position: 'relative' };
-  const logoStyle = {
-    width: '4rem', height: '4rem',
-    background: 'linear-gradient(135deg, #D2691E, #CD853F)',
-    borderRadius: '50%',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    boxShadow: '0 0 20px rgba(210, 105, 30, 0.5)',
-    animation: 'pulse 2s infinite'
-  };
-  const titleStyle = {
-    fontSize: '2.5rem', fontWeight: 'bold',
-    background: 'linear-gradient(135deg, #D2691E, #CD853F, #DEB887)',
-    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-    textAlign: 'center', marginBottom: '0.5rem'
-  };
-  const subtitleStyle = { color: 'rgba(209, 213, 219, 0.8)', textAlign: 'center', fontSize: '0.875rem', marginBottom: '2rem' };
-  const inputGroupStyle = { marginBottom: '1.5rem' };
-  const labelStyle = { display: 'block', color: '#d1d5db', fontWeight: '500', fontSize: '0.875rem', marginBottom: '0.5rem' };
-  const inputStyle = (hasError) => ({
-    width: '100%', padding: '0.75rem 1rem',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    backdropFilter: 'blur(10px)',
-    border: hasError ? '1px solid rgba(239, 68, 68, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '1rem', color: 'white', fontSize: '1rem',
-    outline: 'none', transition: 'all 0.3s ease',
-    boxShadow: hasError ? '0 0 0 1px rgba(239, 68, 68, 0.5)' : 'none'
-  });
-  const selectStyle = (hasError) => ({ ...inputStyle(hasError), cursor: 'pointer' });
-  const passwordContainerStyle = { position: 'relative', display: 'flex', alignItems: 'center' };
-  const showPasswordButtonStyle = {
-    position: 'absolute', right: '0.75rem',
-    background: 'none', border: 'none', color: '#D2691E',
-    fontSize: '0.75rem', fontWeight: '600', cursor: 'pointer',
-    transition: 'color 0.2s ease'
-  };
-  const strengthIndicatorStyle = { marginTop: '0.75rem' };
-  const strengthBarContainerStyle = { width: '100%', height: '0.5rem', backgroundColor: 'rgba(55, 65, 81, 0.5)', borderRadius: '0.25rem', overflow: 'hidden', marginTop: '0.5rem' };
-  const strengthBarStyle = { height: '100%', backgroundColor: strengthColors[passwordScore], width: strengthWidth, transition: 'all 0.5s ease', borderRadius: '0.25rem' };
-  const errorStyle = { color: '#f87171', fontSize: '0.75rem', marginTop: '0.25rem' };
-  const submitButtonStyle = {
-    width: '100%', padding: '1rem',
-    background: 'linear-gradient(135deg, #D2691E, #CD853F, #D2691E)',
-    border: 'none', borderRadius: '1rem', color: 'white',
-    fontSize: '1.125rem', fontWeight: 'bold', cursor: isLoading ? 'not-allowed' : 'pointer',
-    transition: 'all 0.3s ease', boxShadow: '0 10px 25px rgba(210, 105, 30, 0.3)',
-    opacity: isLoading ? 0.5 : 1, position: 'relative', overflow: 'hidden'
-  };
-  const successMessageStyle = {
-    marginTop: '1rem', padding: '1rem',
-    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-    border: '1px solid rgba(34, 197, 94, 0.2)',
-    borderRadius: '1rem', backdropFilter: 'blur(10px)',
-    textAlign: 'center', color: '#4ade80',
-    fontSize: '0.875rem', fontWeight: '500'
-  };
+    setIsLoading(true)
+    Swal.fire({
+      title: 'กำลังบันทึกข้อมูล...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    })
+
+    try {
+      const res = await fetch('https://backend-nextjs-virid.vercel.app/api/users', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await res.json()
+      console.log('API Response:', result)
+
+      if (res.ok) {
+        Swal.close()
+        await Swal.fire({
+          icon: 'success',
+          title: '✅ บันทึกข้อมูลเรียบร้อยแล้ว',
+          text: `สร้างผู้ใช้ ${formData.username} สำเร็จ`,
+          confirmButtonColor: '#8B1538',
+          timer: 2000,
+          showConfirmButton: false
+        })
+        
+        // รีเซ็ตฟอร์ม
+        setFormData({
+          firstname: '',
+          fullname: '',
+          lastname: '',
+          username: '',
+          password: '',
+          sex: ''
+        })
+        
+        // กลับไปหน้ารายการผู้ใช้
+        router.push('/admin/users')
+      } else {
+        Swal.fire({
+          title: '❌ เกิดข้อผิดพลาด',
+          text: result.message || 'ไม่สามารถบันทึกข้อมูลได้',
+          icon: 'error',
+          confirmButtonColor: '#8B1538'
+        })
+      }
+    } catch (error) {
+      console.error('Network Error:', error)
+      Swal.fire({
+        icon: 'error',
+        title: '❌ ข้อผิดพลาดเครือข่าย',
+        text: 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้',
+        confirmButtonColor: '#8B1538'
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
-    <div style={containerStyle}>
-      {/* background */}
-      <div style={backgroundParticleStyle('24rem', '#D2691E', `${20 + mousePosition.x * 0.1}%`, `${10 + mousePosition.y * 0.1}%`, 'float 6s ease-in-out infinite')} />
-      <div style={backgroundParticleStyle('20rem', '#CD853F', `${70 + mousePosition.x * 0.05}%`, `${80 + mousePosition.y * 0.05}%`, 'float 8s ease-in-out infinite reverse')} />
-      <div style={backgroundParticleStyle('16rem', '#DEB887', `${60 + mousePosition.x * 0.03}%`, `${60 + mousePosition.y * 0.03}%`, 'float 10s ease-in-out infinite')} />
+    <div className="register-container">
+      {/* Background shapes */}
+      <div className="bg-shapes">
+        <div className="shape shape-1"></div>
+        <div className="shape shape-2"></div>
+        <div className="shape shape-3"></div>
+      </div>
 
-      {/* form */}
-      <div style={formContainerStyle}>
-        <div style={logoContainerStyle}>
-          <div style={logoStyle}>
-            <svg width="36" height="36" fill="white" viewBox="0 0 24 24"><path d="M2.5 13C2.22 13 2 13.22 2 13.5V17.5C2 17.78 2.22 18 2.5 18H21.5C21.78 18 22 17.78 22 17.5V13.5C22 13.22 21.78 13 21.5 13H15L14 11H16.5C16.78 11 17 10.78 17 10.5S16.78 10 16.5 10H14.41L13.41 9H16.5C16.78 9 17 8.78 17 8.5S16.78 8 16.5 8H12.91L11.91 7H16.5C16.78 7 17 6.78 17 6.5S16.78 6 16.5 6H11.41L10.29 4.71C10.11 4.43 9.75 4.35 9.47 4.53L2.71 8.29C2.43 8.47 2.35 8.83 2.53 9.11L3.59 10.73C3.77 11.01 4.13 11.09 4.41 10.91L5 10.56V13H2.5Z"/></svg>
+      <div className="register-card">
+        <div className="card-header">
+          <div className="avatar">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z"/>
+            </svg>
           </div>
+          <h1>เพิ่มผู้ใช้ใหม่</h1>
+          <p>กรอกข้อมูลผู้ใช้ในระบบ</p>
         </div>
 
-        <h1 style={titleStyle}>ShoesHub</h1>
-        <p style={subtitleStyle}>สมัครสมาชิกเพื่อช้อปรองเท้าแบรนด์ดัง</p>
-
-        <div>
-          {/* firstname */}
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>คำนำหน้าชื่อ</label>
-            <select value={firstname} onChange={(e)=>{setFirstname(e.target.value); clearError('firstname');}} style={selectStyle(errors.firstname)}>
-              <option value="">เลือกคำนำหน้าชื่อ</option>
-              <option value="นาย">นาย</option>
-              <option value="นาง">นาง</option>
-              <option value="นางสาว">นางสาว</option>
-            </select>
-            {errors.firstname && <p style={errorStyle}>{errors.firstname}</p>}
-          </div>
-
-          {/* fullname */}
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>ชื่อ</label>
-            <input type="text" placeholder="กรอกชื่อ" value={fullname} onChange={(e)=>{setFullname(e.target.value); clearError('fullname');}} style={inputStyle(errors.fullname)} />
-            {errors.fullname && <p style={errorStyle}>{errors.fullname}</p>}
-          </div>
-
-          {/* lastname */}
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>นามสกุล</label>
-            <input type="text" placeholder="กรอกนามสกุล" value={lastname} onChange={(e)=>{setLastname(e.target.value); clearError('lastname');}} style={inputStyle(errors.lastname)} />
-            {errors.lastname && <p style={errorStyle}>{errors.lastname}</p>}
-          </div>
-
-          {/* phone */}
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>เบอร์โทรศัพท์</label>
-            <input type="tel" placeholder="0xx-xxx-xxxx" value={phone} onChange={(e)=>{setPhone(e.target.value); clearError('phone');}} style={inputStyle(errors.phone)} />
-            {errors.phone && <p style={errorStyle}>{errors.phone}</p>}
-          </div>
-
-          {/* username */}
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>ชื่อผู้ใช้</label>
-            <input type="text" placeholder="shoemaster123" value={username} onChange={(e)=>{setUsername(e.target.value); clearError('username');}} style={inputStyle(errors.username)} minLength={3} />
-            <p style={errorStyle}>{errors.username || "อย่างน้อย 3 ตัวอักษร"}</p>
-          </div>
-
-          {/* password */}
-          <div style={inputGroupStyle}>
-            <label style={labelStyle}>รหัสผ่าน</label>
-            <div style={passwordContainerStyle}>
-              <input type={showPassword ? "text" : "password"} placeholder="กรอกรหัสผ่าน" value={password} onChange={(e)=>{setPassword(e.target.value); clearError('password');}} style={{...inputStyle(errors.password), paddingRight: '3rem'}} />
-              <button type="button" onClick={()=>setShowPassword(!showPassword)} style={showPasswordButtonStyle}>
-                {showPassword ? "ซ่อน" : "แสดง"}
-              </button>
-            </div>
-            {password && (
-              <div style={strengthIndicatorStyle}>
-                <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.75rem'}}>
-                  <span style={{color:'#9ca3af'}}>ความแข็งแรง</span>
-                  <span style={{color: strengthColors[passwordScore]}}>{strengthText}</span>
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="form-row">
+            <div className="form-group">
+              <label>คำนำหน้าชื่อ *</label>
+              <div className="input-container">
+                <div className="input-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                  </svg>
                 </div>
-                <div style={strengthBarContainerStyle}>
-                  <div style={strengthBarStyle}/>
-                </div>
+                <select 
+                  name="firstname" 
+                  value={formData.firstname}
+                  onChange={handleChange} 
+                  required
+                >
+                  <option value="">เลือกคำนำหน้า</option>
+                  <option value="นาย">นาย</option>
+                  <option value="นาง">นาง</option>
+                  <option value="นางสาว">นางสาว</option>
+                </select>
               </div>
-            )}
-            {errors.password && <p style={errorStyle}>{errors.password}</p>}
+            </div>
+
+            <div className="form-group">
+              <label>เพศ</label>
+              <div className="input-container">
+                <div className="input-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9,9C10.29,9 11.5,9.41 12.47,10.11L17.58,5H13V3H21V11H19V6.41L13.89,11.5C14.59,12.5 15,13.7 15,15A6,6 0 0,1 9,21A6,6 0 0,1 3,15A6,6 0 0,1 9,9M9,11A4,4 0 0,0 5,15A4,4 0 0,0 9,19A4,4 0 0,0 13,15A4,4 0 0,0 9,11Z"/>
+                  </svg>
+                </div>
+                <select 
+                  name="sex" 
+                  value={formData.sex}
+                  onChange={handleChange}
+                >
+                  <option value="">เลือกเพศ</option>
+                  <option value="ชาย">ชาย</option>
+                  <option value="หญิง">หญิง</option>
+                  <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          {/* submit */}
-          <button type="button" disabled={isLoading} onClick={handleSubmit} style={submitButtonStyle}>
-            {isLoading ? "กำลังสมัคร..." : "👟 เริ่มช้อปรองเท้า"}
-          </button>
+          <div className="form-row">
+            <div className="form-group">
+              <label>ชื่อ *</label>
+              <div className="input-container">
+                <div className="input-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  name="fullname"
+                  placeholder="กรอกชื่อ"
+                  value={formData.fullname}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
 
-          {submitted && <div style={successMessageStyle}>🎉 สมัครสมาชิกสำเร็จ! ยินดีต้อนรับ</div>}
+            <div className="form-group">
+              <label>นามสกุล *</label>
+              <div className="input-container">
+                <div className="input-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  name="lastname"
+                  placeholder="กรอกนามสกุล"
+                  value={formData.lastname}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>ชื่อผู้ใช้ *</label>
+              <div className="input-container">
+                <div className="input-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="กรอกชื่อผู้ใช้"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>รหัสผ่าน *</label>
+              <div className="input-container">
+                <div className="input-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                  </svg>
+                </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="กรอกรหัสผ่าน"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    {showPassword ? (
+                      <path d="M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.09L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z"/>
+                    ) : (
+                      <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                    )}
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <div className="spinner"></div>
+                กำลังบันทึก...
+              </>
+            ) : (
+              <>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/>
+                </svg>
+                บันทึกข้อมูล
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="action-buttons">
+          <Link href="/admin/users" className="action-btn secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+            </svg>
+            กลับรายการผู้ใช้
+          </Link>
         </div>
       </div>
-      <style dangerouslySetInnerHTML={{__html:`
-        @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        @keyframes spin {from{transform:rotate(0)}to{transform:rotate(360deg)}}
-        @keyframes pulse {0%,100%{opacity:1}50%{opacity:.8}}
-      `}}/>
+
+      <style jsx>{`
+        .register-container {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #8B1538 0%, #A0153E 25%, #5C0B1E 50%, #7D2248 75%, #640D1B 100%);
+          padding: 20px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .bg-shapes {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          z-index: 0;
+        }
+
+        .shape {
+          position: absolute;
+          background: linear-gradient(135deg, rgba(165, 42, 42, 0.08) 0%, rgba(139, 21, 56, 0.12) 100%);
+          border-radius: 50%;
+          backdrop-filter: blur(2px);
+        }
+
+        .shape-1 {
+          width: 180px;
+          height: 180px;
+          top: 10%;
+          left: 10%;
+          animation: float 8s ease-in-out infinite;
+        }
+
+        .shape-2 {
+          width: 120px;
+          height: 120px;
+          top: 70%;
+          right: 20%;
+          animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .shape-3 {
+          width: 90px;
+          height: 90px;
+          top: 30%;
+          right: 15%;
+          animation: float 7s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%, 100% { 
+            transform: translateY(0px) rotate(0deg); 
+            opacity: 0.6;
+          }
+          50% { 
+            transform: translateY(-20px) rotate(180deg); 
+            opacity: 0.9;
+          }
+        }
+
+        .register-card {
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 248, 248, 0.9) 100%);
+          backdrop-filter: blur(20px);
+          border: 2px solid rgba(139, 21, 56, 0.15);
+          border-radius: 24px;
+          padding: 40px;
+          max-width: 800px;
+          margin: 0 auto;
+          box-shadow: 
+            0 25px 50px rgba(139, 21, 56, 0.25),
+            0 0 0 1px rgba(139, 21, 56, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          position: relative;
+          z-index: 1;
+          animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .card-header {
+          text-align: center;
+          margin-bottom: 32px;
+        }
+
+        .avatar {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 20px;
+          background: linear-gradient(135deg, #8B1538 0%, #A0153E 50%, #7D2248 100%);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          box-shadow: 0 8px 25px rgba(139, 21, 56, 0.3);
+        }
+
+        .card-header h1 {
+          color: #5C0B1E;
+          font-size: 28px;
+          font-weight: 700;
+          margin: 0 0 8px 0;
+          letter-spacing: -0.5px;
+        }
+
+        .card-header p {
+          color: #8B1538;
+          font-size: 16px;
+          margin: 0;
+          font-weight: 500;
+          opacity: 0.8;
+        }
+
+        .register-form {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .form-group label {
+          font-weight: 600;
+          color: #5C0B1E;
+          font-size: 14px;
+        }
+
+        .input-container {
+          position: relative;
+          background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 248, 248, 0.7) 100%);
+          border: 2px solid rgba(139, 21, 56, 0.1);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(139, 21, 56, 0.08);
+        }
+
+        .input-container:focus-within {
+          border-color: #8B1538;
+          box-shadow: 0 0 20px rgba(139, 21, 56, 0.2);
+        }
+
+        .input-icon {
+          padding: 0 15px;
+          color: #8B1538;
+          opacity: 0.7;
+        }
+
+        .input-container input,
+        .input-container select {
+          flex: 1;
+          background: transparent;
+          border: none;
+          outline: none;
+          padding: 14px 8px 14px 0;
+          color: #2D1B22;
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        .input-container input::placeholder {
+          color: rgba(139, 21, 56, 0.5);
+          font-weight: 400;
+        }
+
+        .password-toggle {
+          background: none;
+          border: none;
+          color: #8B1538;
+          padding: 14px;
+          cursor: pointer;
+          opacity: 0.6;
+          transition: all 0.3s ease;
+          border-radius: 50%;
+        }
+
+        .password-toggle:hover {
+          opacity: 1;
+          background: rgba(139, 21, 56, 0.1);
+        }
+
+        .submit-btn {
+          background: linear-gradient(135deg, #8B1538 0%, #A0153E 25%, #7D2248 75%, #640D1B 100%);
+          border: none;
+          border-radius: 14px;
+          padding: 16px 24px;
+          color: white;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: all 0.4s ease;
+          margin-top: 20px;
+          box-shadow: 0 8px 25px rgba(139, 21, 56, 0.4);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 35px rgba(139, 21, 56, 0.5);
+        }
+
+        .submit-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        .spinner {
+          width: 18px;
+          height: 18px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top: 2px solid white;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .action-buttons {
+          margin-top: 20px;
+          display: flex;
+          justify-content: center;
+        }
+
+        .action-btn {
+          padding: 12px 20px;
+          border-radius: 10px;
+          text-decoration: none;
+          font-weight: 500;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: all 0.3s ease;
+          border: 2px solid rgba(139, 21, 56, 0.2);
+        }
+
+        .action-btn.secondary {
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(248, 248, 248, 0.5) 100%);
+          color: #8B1538;
+        }
+
+        .action-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(139, 21, 56, 0.15);
+        }
+
+        @media (max-width: 768px) {
+          .register-card {
+            padding: 30px 20px;
+            margin: 10px;
+          }
+
+          .form-row {
+            grid-template-columns: 1fr;
+            gap: 15px;
+          }
+
+          .card-header h1 {
+            font-size: 24px;
+          }
+
+          .avatar {
+            width: 70px;
+            height: 70px;
+          }
+        }
+      `}</style>
     </div>
-  );
+  )
 }
