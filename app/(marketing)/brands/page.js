@@ -52,7 +52,7 @@ export default function VansStore() {
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)' }}>
       {/* Header */}
       <div style={{ 
-        background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e53e3e 100%)', 
+        background: 'linear-gradient(135deg, #000000 0%, #1f2937 50%, #e53e3e 100%)', 
         color: 'white', 
         padding: '64px 16px',
         textAlign: 'center',
@@ -101,34 +101,6 @@ export default function VansStore() {
           }}>
             Off The Wall
           </p>
-          <div style={{ 
-            marginTop: '32px', 
-            display: 'flex', 
-            justifyContent: 'center', 
-            gap: '24px',
-            flexWrap: 'wrap'
-          }}>
-            <span style={{ 
-              background: 'rgba(255, 255, 255, 0.1)', 
-              padding: '8px 16px', 
-              borderRadius: '20px',
-              fontSize: '14px',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
-            }}>
-              ✓ Authentic Skate Culture
-            </span>
-            <span style={{ 
-              background: 'rgba(255, 255, 255, 0.1)', 
-              padding: '8px 16px', 
-              borderRadius: '20px',
-              fontSize: '14px',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
-            }}>
-              ✓ Street Style Icon
-            </span>
-          </div>
         </div>
       </div>
 
@@ -152,7 +124,7 @@ export default function VansStore() {
               <div style={{ 
                 position: 'relative',
                 height: '320px', 
-                background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e53e3e 100%)', 
+                background: 'linear-gradient(135deg, #1f2937 0%, #374151 50%, #e53e3e 100%)', 
                 padding: '40px',
                 display: 'flex',
                 alignItems: 'center',
@@ -232,7 +204,7 @@ export default function VansStore() {
                   {favorites.includes(shoe.id) ? '❤️' : '🤍'}
                 </button>
 
-                {/* SALE Badge for first item */}
+                {/* NEW Badge */}
                 {shoe.id === 1 && (
                   <div style={{
                     position: 'absolute',
@@ -247,26 +219,7 @@ export default function VansStore() {
                     boxShadow: '0 4px 12px rgba(229, 62, 62, 0.4)',
                     letterSpacing: '1px'
                   }}>
-                    SALE
-                  </div>
-                )}
-
-                {/* FEATURED Badge for second item */}
-                {shoe.id === 2 && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-                    color: 'white',
-                    padding: '6px 16px',
-                    borderRadius: '20px',
-                    fontSize: '12px',
-                    fontWeight: 'bold',
-                    boxShadow: '0 4px 12px rgba(245, 158, 11, 0.4)',
-                    letterSpacing: '1px'
-                  }}>
-                    FEATURED
+                    NEW
                   </div>
                 )}
               </div>
@@ -358,7 +311,7 @@ export default function VansStore() {
                   onClick={() => setSelectedShoe(shoe)}
                   style={{
                     width: '100%',
-                    background: 'linear-gradient(135deg, #000000 0%, #e53e3e 100%)',
+                    background: 'linear-gradient(135deg, #1f2937 0%, #e53e3e 100%)',
                     color: 'white',
                     padding: '14px',
                     borderRadius: '12px',
@@ -487,7 +440,7 @@ export default function VansStore() {
             <div style={{ padding: '32px' }}>
               {/* Image */}
               <div style={{ 
-                background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #e53e3e 100%)', 
+                background: 'linear-gradient(135deg, #1f2937 0%, #374151 50%, #e53e3e 100%)', 
                 borderRadius: '16px', 
                 padding: '32px', 
                 marginBottom: '32px',
@@ -615,7 +568,7 @@ export default function VansStore() {
                 </div>
               </div>
 
-              {/* Additional Info - Vans specific */}
+              {/* Additional Info */}
               <div style={{ 
                 background: 'linear-gradient(135deg, #f8fafc, #e2e8f0)', 
                 borderRadius: '16px', 
@@ -640,23 +593,19 @@ export default function VansStore() {
                 }}>
                   <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
-                    รับประกันคุณภาพจาก Vans แท้ 100%
+                    รับประกันสินค้า 1 ปี
                   </p>
                   <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
-                    จัดส่งฟรีเมื่อซื้อครบ 1,500 บาท
+                    จัดส่งฟรีเมื่อซื้อครบ 2,000 บาท
                   </p>
                   <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
-                    เปลี่ยนคืนได้ภายใน 14 วัน
+                    คืนสินค้าได้ภายใน 30 วัน
                   </p>
                   <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
-                    ผลิตโดยโรงงานมาตรฐาน Skate Culture
-                  </p>
-                  <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span>
-                    Waffle Sole รูปแบบดั้งเดิม เกรียบดีเยี่ยม
+                    ทดลองใส่ได้ที่ร้าน Vans ทุกสาขา
                   </p>
                 </div>
               </div>
@@ -666,7 +615,7 @@ export default function VansStore() {
                 onClick={() => setSelectedShoe(null)}
                 style={{
                   width: '100%',
-                  background: 'linear-gradient(135deg, #000000 0%, #e53e3e 100%)',
+                  background: 'linear-gradient(135deg, #1f2937 0%, #e53e3e 100%)',
                   color: 'white',
                   padding: '16px',
                   borderRadius: '12px',

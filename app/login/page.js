@@ -206,9 +206,7 @@ export default function Login() {
               <span className="checkmark"></span>
               จดจำการเข้าสู่ระบบ
             </label>
-            <Link href="/forgot-password" className="forgot-password">
-              ลืมรหัสผ่าน?
-            </Link>
+            
           </div>
 
           <button type="submit" className="submit-btn" disabled={isLoading}>
